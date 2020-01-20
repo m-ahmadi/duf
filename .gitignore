@@ -1,0 +1,12 @@
+node_modules/
+package-lock.json
+.sass-cache/
+html/link-modulepreload/*
+html/script-app/*
+public/lib/_templates.js
+public/lib/_partials.js
+public/js/#.js
+public/css/*
+public/index.html
+public/data/*
+release/*

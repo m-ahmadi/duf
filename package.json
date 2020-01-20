@@ -1,0 +1,35 @@
+{
+  "name": "MyApp",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "build": "node build.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-ahmadi/stack4.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/m-ahmadi/stack4/issues"
+  },
+  "homepage": "https://github.com/m-ahmadi/stack4#readme",
+  "devDependencies": {
+    "rollup": "latest",
+    "gulp": "latest",
+    "gulp-livereload": "latest",
+    "gulp-shell": "latest",
+    "htmlbilder": "latest",
+    "sass": "latest",
+    "shelljs": "latest"
+  },
+  "dependencies": {
+    "handlebars": "latest",
+    "jquery": "latest",
+    "pubsub-ma": "latest",
+    "util-ma": "latest"
+  }
+}
