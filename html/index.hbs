@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"> <!-- fa en-US -->
+<html lang="en" dir="rtl"> <!-- fa en-US -->
 <head>
 	{{{ link-modulepreload }}}
 	<meta charset="utf-8" />
@@ -9,10 +9,36 @@
 	<title>Stack4 Boilerplate</title>
 </head>
 <body>
-	<div id="app">
-		<div id="comp1"></div>
-		<div id="comp2"></div>
-	</div>
+	<table class="uk-table uk-table-hover">
+		<tr>
+			<th>نماد</th>
+			<th>ورود</th>
+			<th>تاریخ</th>
+			<th>منبع</th>
+			<th>رنج خرید - حداقل</th>
+			<th>رنج خرید - حداکثر</th>
+			<th>هدف اول</th>
+			<th>هدف دوم</th>
+			<th>حد ضرر اول</th>
+			<th>حد ضرر دوم</th>
+			<th>زمان</th>
+			<th>ریسک</th>
+		</tr>
+		<tr>
+			<td><input type="text" class="uk-input uk-form-small uk-form-width-small" /></td>
+			<td><input type="number" class="uk-input uk-form-small uk-form-width-small" /></td>
+			<td><input type="text" class="uk-input uk-form-small uk-form-width-medium" /></td>
+			<td><select class="uk-select uk-form-small uk-form-width-small"><option>asad</option><option>javad</option></select></td>
+			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
+			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
+			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
+			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
+			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
+			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
+			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /><select class="uk-select uk-form-small uk-form-width-xsmall"><option>روز</option><option>ماه</option></select></td>
+			<td><select class="uk-select uk-form-small uk-form-width-xsmall"><option>کم</option><option>زیاد</option><option>متوسط</option></select></td>
+		</tr>
+	</table>
 	
 	{{{ script-lib }}}
 	
