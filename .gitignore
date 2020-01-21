@@ -1,6 +1,7 @@
 node_modules/
 package-lock.json
 .sass-cache/
+.livereload
 html/link-modulepreload/*
 html/script-app/*
 public/lib/_templates.js

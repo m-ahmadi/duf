@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "build": "node build.js",
+    "toggleLive": "node build.js toggleLive",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

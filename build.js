@@ -4,11 +4,9 @@ const shell = require('shelljs');
 process.env.path += delimiter + './node_modules/.bin';
 
 const args = process.argv.slice(2);
-if ( args.includes('release') ) {
-	release();
-} else {
-	debug();
-}
+args.includes('release')    ? release() :
+args.includes('toggleLive') ? toggleManualLivereload() :
+debug();
 
 function debug() {
 	const INP = '.';
@@ -60,4 +58,17 @@ function release() {
 	fs.writeFileSync(FILE2, fs.readFileSync(FILE2, 'utf8')+"require(['main']);"); // '\n'
 	
 	shell.exec(`sass ${INP}/sass/style.scss:${OUT}/css/style.css --style=compressed --no-source-map`);
+}
+
+function toggleManualLivereload() {
+	const port = Math.floor(Math.random()*65000) + 10000;
+	const str = `<script>document.write('<script src=\"http://' + (location.host || 'localhost').split(':')[0] + ':${port}/livereload.js?snipver=1\"></' + 'script>')</script>`;
+	const file = '.livereload';
+	if ( fs.existsSync(file) ) {
+		fs.unlinkSync(file);
+		console.log('[91mOff[0m');
+	} else {
+		fs.writeFileSync(file, str);
+		console.log('[92mOn[0m');
+	}
 }
