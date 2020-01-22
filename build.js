@@ -61,7 +61,7 @@ function release() {
 }
 
 function toggleManualLivereload() {
-	const port = Math.floor(Math.random()*65000) + 10000;
+	const port = Math.floor(Math.random()*(65000-36000+1))+36000;
 	const str = `<script>document.write('<script src=\"http://' + (location.host || 'localhost').split(':')[0] + ':${port}/livereload.js?snipver=1\"></' + 'script>')</script>`;
 	const file = '.livereload';
 	if ( fs.existsSync(file) ) {
