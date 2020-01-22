@@ -1,3 +1,5 @@
 @echo off
+if "%1" == "-b" (set W=) else set W=-w
 call set.cmd
-rollup -c -w
+title buildjs
+rollup -c %W%

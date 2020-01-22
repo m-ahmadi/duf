@@ -1,3 +1,4 @@
 @echo off
 call set.cmd
-gulp part-w
+if "%1" == "-b" (set W=) else set W=-w
+gulp part%W%
