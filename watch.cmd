@@ -3,6 +3,7 @@ start wp.cmd
 start wt.cmd
 start wl.cmd
 start ws.cmd
+timeout 1
 start wj.cmd
 start wh.cmd
 
