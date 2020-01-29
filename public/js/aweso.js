@@ -4,7 +4,7 @@ let awesomplete;
 let data;
 
 async function init() {
-	let ins = [];// = tse.getInstruments(true, true);
+	let ins = tse.getInstruments(true, true);
 	data = ins.map(i => `${i.Symbol} (${i.Name})`);
 	
 	awesomplete = new Awesomplete('#aweso', {
