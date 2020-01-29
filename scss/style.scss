@@ -5,3 +5,17 @@ body {
 	// direction: rtl;
 	background: #fffdef;
 }
+
+#aweso {
+	font-family: "BYekan";
+	direction: rtl;
+	width: 300px;
+}
+.awesomplete {
+	direction: rtl;
+	
+	> ul:before {
+		top: -.23em;
+		right: 1em;
+	}
+}
