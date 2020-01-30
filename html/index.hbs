@@ -9,15 +9,11 @@
 	<title>Sigman</title>
 </head>
 <body>
-	<input id="aweso" />
-	<table class="uk-table uk-table-hover">
-		<tr>
+	<table id="datable" class="uk-table uk-table-hover uk-width-1-1" data-root="datable">
+		<tr class="pink lighten-5">
 			<th>نماد</th>
-			<th>ورود</th>
+			<th>رنج خرید</th>
 			<th>تاریخ</th>
-			<th>منبع</th>
-			<th>رنج خرید - حداقل</th>
-			<th>رنج خرید - حداکثر</th>
 			<th>هدف اول</th>
 			<th>هدف دوم</th>
 			<th>حد ضرر اول</th>
@@ -26,12 +22,12 @@
 			<th>ریسک</th>
 		</tr>
 		<tr>
-			<td><input type="text" class="uk-input uk-form-small uk-form-width-small" /></td>
+			<td><input type="text" class="uk-input uk-form-small" data-els="aweso" /></td>
+			<td class="stacked">
+				<input type="number" min="1" class="uk-input uk-padding-remove-right" />
+				<input type="number" min="1" class="uk-input uk-padding-remove-right" />
+			</td>
 			<td><input type="number" class="uk-input uk-form-small uk-form-width-small" /></td>
-			<td><input type="text" class="uk-input uk-form-small uk-form-width-medium" /></td>
-			<td><select class="uk-select uk-form-small uk-form-width-small"><option>asad</option><option>javad</option></select></td>
-			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
-			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
 			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
 			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
 			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>

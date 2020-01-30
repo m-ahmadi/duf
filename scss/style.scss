@@ -1,23 +1,39 @@
 @use "uikit";
+@use "materialize-colors";
 
 body {
 	width: 100%;
 	margin: 0 auto;
 	font-family: "BYekan", Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	// direction: rtl;
 	background: #fffdef;
 }
 
-#aweso {
-	font-family: "BYekan";
-	direction: rtl;
-	width: 300px;
-}
+
 .awesomplete {
+	font-family: "BYekan";
+	/*rtl:ignore*/
 	direction: rtl;
+	width: 100%;
 	
 	> ul:before {
 		top: -.23em;
+		/*rtl:ignore*/
 		right: 1em;
+	}
+}
+
+#datable .stacked {
+	position: relative;
+	width: 50px;
+	> input {
+		height: 25px;
+		position: absolute;
+		right: 0;
+		&:first-child {
+			top: 0;
+		}
+		&:last-child {
+			top: 26px;
+		}
 	}
 }

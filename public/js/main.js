@@ -1,10 +1,10 @@
 import tse from './tse/tse.js';
-import aweso from './aweso.js';
+import datable from './datable/datable.js';
 
 
 $(async function () {
 	
 	await tse.init();
-	aweso.init();
+	datable.init();
 	
 });
