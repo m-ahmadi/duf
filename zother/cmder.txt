@@ -13,9 +13,10 @@ commands:
 >cmd /k "%ConEmuDir%\..\init.bat"
 cmd /k "%ConEmuDir%\..\init.bat" && wj
 cmd /k "%ConEmuDir%\..\init.bat" && wh
+cmd /k "%ConEmuDir%\..\init.bat" && ws
+cmd /k "%ConEmuDir%\..\init.bat" && wsr
 cmd /k "%ConEmuDir%\..\init.bat" && wt
 cmd /k "%ConEmuDir%\..\init.bat" && wp
-cmd /k "%ConEmuDir%\..\init.bat" && ws
 cmd /k "%ConEmuDir%\..\init.bat" && wl
 
 Save settings

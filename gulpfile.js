@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// watching templates
+// templates
 const shell = require('gulp-shell');
 const p = 'handlebars ./template/ -f ./public/lib/_partials.js -p -e phbs -o';
 const t = 'handlebars ./template/ -f ./public/lib/_templates.js -e hbs -o';
@@ -13,6 +13,13 @@ gulp.task('part-w', () => {
 });
 gulp.task('temp-w', () => {
 	gulp.watch( './template/**/*.hbs', {ignoreInitial: false}, gulp.series('temp') );
+});
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// rtlcss
+gulp.task( 'rtlcss', shell.task('rtlcss ./public/css/style.css ./public/css/style-rtl.css') );
+
+gulp.task('rtlcss-w', () => {
+	gulp.watch( './public/css/style.css', {ignoreInitial: false}, gulp.series('rtlcss') );
 });
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // livereload

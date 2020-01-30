@@ -2,6 +2,7 @@ node_modules/
 package-lock.json
 .sass-cache/
 .livereload
+.rtlcssrc
 html/link-modulepreload/*
 html/script-app/*
 public/lib/_templates.js

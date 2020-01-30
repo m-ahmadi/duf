@@ -19,12 +19,13 @@
   },
   "homepage": "https://github.com/m-ahmadi/stack4#readme",
   "devDependencies": {
-    "rollup": "latest",
     "gulp": "latest",
     "gulp-livereload": "latest",
     "gulp-shell": "latest",
     "htmlbilder": "latest",
+    "rollup": "latest",
     "sass": "latest",
+    "rtlcss": "latest",
     "shelljs": "latest"
   },
   "dependencies": {
