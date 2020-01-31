@@ -22,17 +22,31 @@
 			<th>ریسک</th>
 		</tr>
 		<tr>
-			<td><input type="text" class="uk-input uk-form-small" data-els="aweso" /></td>
-			<td class="stacked">
-				<input type="number" min="1" class="uk-input uk-padding-remove-right" />
-				<input type="number" min="1" class="uk-input uk-padding-remove-right" />
+			<td>
+				<!-- <input type="text" class="uk-input uk-form-small" data-els="aweso" /> -->
+				<select data-els="aweso"></select>
 			</td>
-			<td><input type="number" class="uk-input uk-form-small uk-form-width-small" /></td>
+			<td class="buyrange">
+				<input type="number" min="1" step="0.1" class="uk-input uk-padding-remove-right" uk-tooltip="title:حداکثر; pos: top" />
+				<input type="number" min="1" step="0.1" class="uk-input uk-padding-remove-right" uk-tooltip="title:حداقل; pos: bottom" />
+			</td>
+			<td class="date">
+				<input type="number" min="1" max="31" class="uk-input uk-form-small" uk-tooltip="روز" data-els="date" />
+				<input type="number" min="1" max="12" class="uk-input uk-form-small" uk-tooltip="ماه" data-els="date" />
+				<input type="number" min="00" max="99" class="uk-input uk-form-small" uk-tooltip="سال" data-els="date" data-year />
+			</td>
 			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
 			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
 			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
 			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /></td>
-			<td><input type="number" class="uk-input uk-form-small uk-form-width-xsmall" /><select class="uk-select uk-form-small uk-form-width-xsmall"><option>روز</option><option>ماه</option></select></td>
+			<td class="w8time">
+				<input type="number" class="uk-input uk-form-small" />
+				<select class="uk-select uk-form-small">
+					<option>روز</option>
+					<option>ماه</option>
+					<option>سال</option>
+				</select>
+			</td>
 			<td><select class="uk-select uk-form-small uk-form-width-xsmall"><option>کم</option><option>زیاد</option><option>متوسط</option></select></td>
 		</tr>
 	</table>

@@ -21,19 +21,37 @@ body {
 		right: 1em;
 	}
 }
+.chosen-search-input {
+	font-family: "BYekan" !important;
+}
 
-#datable .stacked {
-	position: relative;
-	width: 50px;
-	> input {
-		height: 25px;
-		position: absolute;
-		right: 0;
-		&:first-child {
-			top: 0;
+
+
+
+#datable {
+	.buyrange {
+		position: relative;
+		width: 65px;
+		> input {
+			height: 25px;
+			position: absolute;
+			right: 0;
+			&:first-child {
+				top: 0;
+			}
+			&:last-child {
+				top: 26px;
+			}
 		}
-		&:last-child {
-			top: 26px;
-		}
+	}
+	
+	.date > input {
+		width: 35px;
+		height: 22px !important;
+		padding: 0 !important;
+	}
+
+	.w8time > * {
+		width: 50px;
 	}
 }

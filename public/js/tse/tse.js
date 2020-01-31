@@ -11,7 +11,7 @@ async function init() {
 	instruments = localStorage.getItem('sigman.instruments');
 	shares = localStorage.getItem('sigman.shares');
 	
-	if (instruments) {
+	if (!instruments) {
 		const res = await rq.InstrumentAndShare(0, 0);
 		// TODO: check against bad requests
 		const splitted = res.split('@');
