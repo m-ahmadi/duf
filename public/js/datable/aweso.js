@@ -8,16 +8,27 @@ function init() {
 }
 
 function make($el) {
-	const awesomplete = new Awesomplete($el[0], {
-		minChars: 1,
+	const awesoInst = new Awesomplete($el[0], {
+		minChars: 0,
 		maxItems: 20,
-		list: []
+		list: data.sort((a,b)=>a.localeCompare(b,'fa'))
 	});
 
 	$el.on('input', function (e) {
 		const inpText = $(e.target).val();
 		if (inpText.length > 1) {
-			awesomplete.list = data.filter( i => i.includes(inpText) );
+			awesoInst.list = data.filter( i => i.includes(inpText) );
+		}
+	});
+	
+	$el.on('focus', function () {
+		if (awesoInst.ul.childNodes.length === 0) {
+			awesoInst.minChars = 0;
+			awesoInst.evaluate();
+		} else if (awesoInst.ul.hasAttribute('hidden')) {
+			awesoInst.open();
+		} else {
+			awesoInst.close();
 		}
 	});
 
