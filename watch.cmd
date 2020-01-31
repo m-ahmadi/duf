@@ -2,8 +2,8 @@
 start wp.cmd
 start wt.cmd
 start wl.cmd
-timeout 1
 start wsr.cmd
+timeout 1
 start ws.cmd
 start wj.cmd
 start wh.cmd
