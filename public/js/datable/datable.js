@@ -1,5 +1,6 @@
 import aweso from './aweso.js';
 import chosen from './chosen.js';
+import tree from './tree/tree.js';
 
 let $$;
 const dateRgx = /^[0189]{1}\d{1}\/(1[0-2]|[1-9])\/([1-9]|[1-2]\d|3[01])$/;
@@ -7,11 +8,12 @@ const dateRgx = /^[0189]{1}\d{1}\/(1[0-2]|[1-9])\/([1-9]|[1-2]\d|3[01])$/;
 function init() {
 	$$ = __els('[data-root="datable"]');
 	
-	aweso.init();
-	chosen.init();
-	
+	// aweso.init();
 	// aweso.make($$.aweso);
-	chosen.make($$.aweso);
+	
+	// chosen.init();
+	// chosen.make($$.aweso);
+	tree.init();
 	
 	$$.date.on('input blur change', function () {
 		const v = +this.value;
