@@ -3,7 +3,7 @@ import tse from '../../tse/tse.js';
 
 function transformData(baseData) {
 	const base = baseData;
-	let ins = tse.getInstruments(true, true);
+	const ins = tse.getInstruments(true, true);
 	
 	base.forEach(i => i.count = 0);
 	ins.forEach(i => {
@@ -32,6 +32,7 @@ function transformData(baseData) {
 			dd.find(j => j.parent === dd[i].id).parent = '#';
 			dd.splice(i, 1);
 		});
+	
 	// put child-less root-nodes at end:
 	const childless = dd.filter(i => i.parent === '#' && !dd.filter(j=>j.parent===i.id).length);
 	childless.map( i => dd.splice(dd.findIndex(j=>j.id===i.id), 1) );
@@ -49,10 +50,11 @@ function initJstree(baseData) {
 			text: i.node + ` <small style="color:grey;">(${i.count})</small>`,
 			parent: ''+i.parent,
 			// state: { opened: true },
-			...i.id === 300 && {state: { selected: true }},
-			...i.parent !== '#' && {icon: 'jstree-file'}
+			...i.id === 300 && {state: { selected: true }}, // tmp, preselect one category
+			...i.parent !== '#' && {icon: 'jstree-file'} // file icon for childs
 		};
 	});
+	// change icon of child-less root-nodes:
 	jd.filter(i => i.parent === '#' && !jd.filter(j => j.parent === i.id).length)
 		.forEach(i => i.icon = 'jstree-file');
 	
