@@ -1,0 +1,82 @@
+.combo {
+  width: 400px;
+  position: relative;
+}
+.combo *, .combo *::before, .combo *::after {
+  box-sizing: border-box;
+}
+.combo .focus {
+  background: #0080ff;
+}
+.combo .hide {
+  display: none;
+}
+.combo input {
+  position: absolute;
+  width: 100%;
+}
+.combo table {
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  border: 1px solid grey;
+  border-spacing: 0;
+}
+.combo table td {
+  border-width: 0 0 1px;
+  border-style: solid;
+  border-color: grey;
+}
+.combo table tr:last-child td {
+  border-bottom: 0;
+}
+.combo span {
+  position: absolute;
+  left: 5px;
+  cursor: default;
+  font-family: initial;
+  user-select: none;
+  cursor: pointer;
+}
+.combo svg {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 5px;
+  left: 20px;
+  cursor: pointer;
+}
+.combo .jtree {
+  position: absolute;
+  top: 0;
+  right: 400px;
+  width: 320px;
+  height: 310px;
+  font-size: 0.9rem;
+  overflow-x: scroll;
+  border: 1px solid #e3e3e3;
+  background: #ffffd3;
+  transition: width 50ms;
+}
+.combo .jtree small {
+  font-size: 0.67rem;
+  color: #b3b3b3;
+}
+.combo .jtree.jstree.jstree-default > ul.jstree-container-ul > * li.jstree-node > a.jstree-anchor > i.jstree-themeicon {
+  display: none;
+}
+.combo .jtree.jstree.jstree-default > ul.jstree-container-ul > li:nth-last-child(2) > a.jstree-anchor > i.jstree-themeicon {
+  display: none;
+}
+.combo .jtree.jstree.jstree-default > ul.jstree-container-ul > li:last-child > a.jstree-anchor > i.jstree-themeicon {
+  display: none;
+}
+.combo .jtree.jstree.jstree-default.jstree-rtl .jstree-anchor > .jstree-themeicon {
+  margin-right: -2px;
+}
+.combo .jtree.slide {
+  width: 0;
+  border-left: none;
+  border-right: none;
+  overflow: hidden;
+}
