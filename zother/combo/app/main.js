@@ -10,23 +10,21 @@ $(async function () {
 	
 	const cFocus = 'focus';
 	const cHide = 'hide';
-	const input = $('.combo > input');
-	const table = $('.combo > table');
-	const tbody = $('.combo > table > tbody');
-	const trs = $('.combo > table > tbody tr');
+	const input = $('.combo > input:nth-child(1)');
+	const ul = $('.combo > ul:nth-child(4)');
 	let i = -1;
 	
 	// focus on mouse move and select item on mousedown
-	table
-	.on('mouseenter', 'tr', function () {
+	ul
+	.on('mouseenter', 'li', function () {
 		i	 = $(this).index();
-		trs.removeClass(cFocus);
+		$('li', ul).removeClass(cFocus);
 		$(this).addClass(cFocus);
 	})
-	.on('mouseleave', 'tr', function () {
+	.on('mouseleave', 'li', function () {
 		$(this).removeClass(cFocus);
 	})
-	.on('mousedown', 'td', function ({which}) {
+	.on('mousedown', 'li', function ({which}) {
 		input.val( $(this).html() );
 		close();
 	});
@@ -36,19 +34,18 @@ $(async function () {
 		const key = e.which;
 		if (key !== 38 && key !== 40 && key !== 13 && key !== 27) return;
 		if (key === 13) {
-			input.val( $('tr.focus > td', table).html() );
+			input.val( $('li.focus', ul).html() );
 			close();
 			return;
 		} else if (key === 27) {
 			input.val('');
 			return;
 		}
-		const trs = $('tr', tbody);
+		const lis = $('li', ul);
 		const inc = key === 38 ? -1 : key === 40 ? 1 : 0; // 38=up 40=down
 		i += inc;
-		i = i > trs.length-1 ? 0 : i < 0 ? trs.length-1 : i;
-		$('tr', tbody).removeClass(cFocus);
-		trs.eq(i).addClass(cFocus);
+		i = i > lis.length-1 ? 0 : i < 0 ? lis.length-1 : i;
+		lis.removeClass(cFocus).eq(i).addClass(cFocus);
 	});
 	
 	const data = ins.map(i => [i.Symbol, i.Name]);
@@ -57,31 +54,29 @@ $(async function () {
 	input
 		.on('blur', close)
 		.on('focus', open)
-		.on('input change', function () {
+		.on('input change', _debounce(function () {
 			const v = this.value;
 			// if (v === '') open();
+			if (v.length < 2) return;
 			const res = data.filter( i => i.join(' ').includes(v) );
-			// log(res)
-			
-			tbody.html(res.map(i=>`
-				<tr>
-					<td>${i[0]}</td>
-					<td>${i[1]}</td>
-				</tr>
+			const rgx = new RegExp(v, 'g');
+			const replaceWith = `<span class="query">${v}</span>`;
+			ul.html(res.map(i=>`
+				<li>${i[0].replace(rgx, replaceWith)} - ${i[1].replace(rgx, replaceWith)}</li>
 			`));
-		});
+		}, 100));
 	
 	function reset() {
 		i = -1;
-		trs.removeClass(cFocus);
+		$('li', ul).removeClass(cFocus);
 	}
 	function open() {
 		reset();
-		if ( table.hasClass(cHide) ) table.removeClass(cHide);
+		if ( ul.hasClass(cHide) ) ul.removeClass(cHide);
 	}
 	function close() {
 		reset();
-		if ( !table.hasClass(cHide) ) table.addClass(cHide);
+		if ( !ul.hasClass(cHide) ) ul.addClass(cHide);
 	}
 	
 	const x = $('.combo span:nth-child(3)');
