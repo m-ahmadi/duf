@@ -5,25 +5,28 @@ body {
 .combo {
   width: 400px;
   position: relative;
-  /* ul:nth-child(4) {
+  /* table:nth-child(4) {
   	position: absolute;
-  	top: 5px;
+  	top: 23px;
   	width: 100%;
-  	height: 200px;
-  	overflow-y: scroll;
   	border: 1px solid grey;
   	border-top: none;
   	border-spacing: 0;
-  	list-style: none;
-  	padding: 0;
-
-  	> li {
-  		width: 100%;
+  	tbody {
+  		display: block;
+  		padding:0;
+  		height: 90vh;
+  		overflow-y: scroll;
+  	}
+  	td {
+  		font-size: 0.9rem;
   		border-width: 0 0 1px;
   		border-style: solid;
   		border-color: grey;
-  		&:last-child { border-bottom: 0; }
   	}
+  	tr:last-child td { border-bottom: 0; }
+  	td:first-child { width: 20%; }
+  	td:last-child { width: 40%; font-size: 0.8rem; }
   } */
 }
 .combo *, .combo *::before, .combo *::after {
@@ -38,35 +41,41 @@ body {
 .combo input {
   position: absolute;
   width: 100%;
+  font-family: "Segoe UI";
 }
-.combo table:nth-child(4) {
+.combo ul:nth-child(4) {
   position: absolute;
-  top: 20px;
+  top: 8px;
   width: 100%;
-  border: 1px solid grey;
+  height: 80vh;
+  overflow-y: scroll;
+  border: 1px solid #b0b0b0;
   border-top: none;
   border-spacing: 0;
+  list-style: none;
+  padding: 0;
 }
-.combo table:nth-child(4) tbody {
-  display: block;
-  height: 90vh;
-  overflow-y: scroll;
-}
-.combo table:nth-child(4) td {
-  font-size: 0.9rem;
+.combo ul:nth-child(4) > li {
+  float: right;
+  width: 100%;
   border-width: 0 0 1px;
   border-style: solid;
-  border-color: grey;
+  border-color: #b0b0b0;
+  font-size: 0.9rem;
 }
-.combo table:nth-child(4) tr:last-child td {
+.combo ul:nth-child(4) > li:last-child {
   border-bottom: 0;
 }
-.combo table:nth-child(4) td:first-child {
-  width: 20%;
+.combo ul:nth-child(4) > li > div {
+  float: right;
 }
-.combo table:nth-child(4) td:last-child {
-  width: 40%;
+.combo ul:nth-child(4) > li > div:first-child {
+  width: 30%;
+}
+.combo ul:nth-child(4) > li > div:last-child {
+  width: 70%;
   font-size: 0.8rem;
+  line-height: 1.5rem;
 }
 .combo span:nth-child(3) {
   position: absolute;
@@ -121,4 +130,5 @@ body {
 }
 .combo .query {
   background: #ffffbf;
+  line-height: 1.4;
 }
