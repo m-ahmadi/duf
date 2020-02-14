@@ -25,18 +25,17 @@ $(async function () {
 		$(this).removeClass(cFocus);
 	})
 	.on('mousedown', 'li', function ({which}) {
-		input.val( $(this).html() );
+		input.val(this.dataset.val);
 		close();
 	});
 	
-	// nav with up/down arrow, select with enter
+	// nav on up/down arrow, select on enter, clear on esc.
 	$('.combo').on('keydown', function (e) {
 		const key = e.which;
 		if (key !== 38 && key !== 40 && key !== 13 && key !== 27) return;
 		if (key === 13) {
-			input.val( $('li.focus', ul).html() );
+			input.val( $('li.focus', ul).data('val') );
 			close();
-			return;
 		} else if (key === 27) {
 			input.val('');
 			return;
@@ -59,10 +58,13 @@ $(async function () {
 			// if (v === '') open();
 			if (v.length < 2) return;
 			const res = data.filter( i => i.join(' ').includes(v) );
-			const rgx = new RegExp(v, 'g');
-			const replaceWith = `<span class="query">${v}</span>`;
+			const rgx = new RegExp(escRgx(v), 'g');
+			const replaceWith = `<i class="query">${v}</i>`;
 			ul.html(res.map(i=>`
-				<li>${i[0].replace(rgx, replaceWith)} - ${i[1].replace(rgx, replaceWith)}</li>
+				<li data-val="${i[0]}">
+					<span>${i[0].replace(rgx, replaceWith)}</span>
+					<span>${i[1].replace(rgx, replaceWith)}</span>
+				</li>
 			`));
 		}, 100));
 	
@@ -86,6 +88,12 @@ $(async function () {
 	filter.on('click', function () {
 		side.toggleClass('slide');
 	});
+	
+	function escRgx(str) {
+		return str.replace(/[|\\{}()[\]^$+*?.-]/g, '\\$&');
+	}
+	
+	input.trigger('change')
 });
 /* $('.combo').on('click', function (e) {
 		const { target } = e;

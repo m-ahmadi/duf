@@ -47,17 +47,24 @@ var types = [
 ];
 
 export default function (ins) {
-	const jd = finalData( transformData(ins) );
-	const $el = $('.jtree');
-	$el.jstree({
-		core: {
-			data: jd,
-			check_callback: true,
-		},
-		plugins: ['checkbox']
-	});
-	$el.on('changed.jstree', function (e, data) {
-		// el.jstree('rename_node', '1', 'new text')
+	return new Promise((resolve, reject) => {
+		const jd = finalData( transformData(ins) );
+		const $el = $('.jtree');
+		$el.jstree({
+			core: {
+				data: jd,
+				check_callback: true,
+			},
+			plugins: ['checkbox']
+		});
+		
+		$el
+		.on('changed.jstree', function (e, data) {
+			// el.jstree('rename_node', '1', 'new text')
+		})
+		.on('ready.jstree', function () {
+			resolve($el);
+		});
 	});
 }
 
