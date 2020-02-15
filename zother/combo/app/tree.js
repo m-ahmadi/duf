@@ -40,16 +40,31 @@ var types = [
 	{ id: 600, parent: 6,   node: 'اختیار فروش تبعی' },
 	{ id: 602, parent: 6,   node: 'اختیار فروش تبعی فرابورس' },
 	
+	{ id: 7,   parent: '#', node: 'نوع بازار' },
+	{ id: 10,  parent: 7,   node: 'عمومی - مشترک بین بورس و فرابورس' },
+	{ id: 11,  parent: 7,   node: 'بورس' },
+	{ id: 12,  parent: 7,   node: 'فرابورس' },
+	{ id: 13,  parent: 7,   node: 'آتی' },
+	{ id: 14,  parent: 7,   node: 'پایه فرابورس' },
+	{ id: 15,  parent: 7,   node: 'پایه فرابورس - منتشر نمی شود' },
+	{ id: 16,  parent: 7,   node: 'بورس انرژی' },
+	{ id: 17,  parent: 7,   node: 'بورس کالا' },
+	
 	{ id: 903, parent: '#', node: 'دارایی فکری' },
 	{ id: 701, parent: '#', node: 'گواهی سپرده کالایی' },
 	{ id: 901, parent: '#', node: 'انرژی', alias: [902] },
-	{ id: 801, parent: '#', node: 'سلف بورس انرژی', alias: [802,803,804] }
+	{ id: 801, parent: '#', node: 'سلف بورس انرژی', alias: [802,803,804] },
+	
+	{ id: 263, parent: '#', node: 'سبد قابل معامله در بورس' },
+	{ id: 302, parent: '#', node: 'سبد مشاع' },
+	{ id: 248, parent: '#', node: 'گواهی خرید سهام' },
+	{ id: 500, parent: '#', node: 'جایزه سهم' }
 ];
 
 export default function (ins) {
 	return new Promise((resolve, reject) => {
 		const jd = finalData( transformData(ins) );
-		const $el = $('.jtree');
+		const $el = $('#jtree');
 		$el.jstree({
 			core: {
 				data: jd,
@@ -71,11 +86,11 @@ export default function (ins) {
 function finalData(baseData) {
 	const jd = baseData.map(i => ({
 		id: ''+i.id,
-		text: i.node +` <small>(${i.count})</small>`,
+		text: `${i.node} <small>(${i.count})</small>`,
 		parent: ''+i.parent,
 		// state: { opened: true },
-		...i.id === 300 && {state: { selected: true }},
-		...i.parent !== '#' && {icon: 'jstree-file'}
+		...i.id === 300 && {state: { selected: true }}, // tmp, preselect one category
+		...i.parent !== '#' && {icon: 'jstree-file'} // file icon for childs
 	}));
 	// jd.filter(i => i.parent === '#' && !jd.filter(j=>j.parent===i.id).length)
 		// .forEach(i => i.icon = 'jstree-file');
@@ -84,20 +99,19 @@ function finalData(baseData) {
 }
 
 function transformData(ins) {
-	const base = types;
-	
-	base.forEach(i => i.count = 0);
+	// count YVal occurrences
+	types.forEach(i => i.count = 0);
 	ins.forEach(i => {
-		const idx = base.findIndex( j => j.id === i.YVal || (j.alias && j.alias.includes(i.YVal)) );
-		if (idx !== -1) base[idx].count += 1;
+		const idx = types.findIndex( j => j.id === i.YVal || (j.alias && j.alias.includes(i.YVal)) );
+		if (idx !== -1) types[idx].count += 1;
 	});
 	
 	let dd;
 	// count of categories:
-	dd = base.map(i => {
+	dd = types.map(i => {
 		let count = i.count;
 		if (i.parent === '#') {
-			const children = base.filter(j => j.parent === i.id);
+			const children = types.filter(j => j.parent === i.id);
 			if (children.length) count = children.map(i=>i.count).reduce((a,c)=>a+c);
 		}
 		return Object.assign(i, { count });
@@ -118,7 +132,7 @@ function transformData(ins) {
 	childless.map( i => dd.splice(dd.findIndex(j=>j.id===i.id), 1) );
 	dd = dd.concat(childless);
 	
-	// base.filter((v,i,a) => v.parent === '#' && a.find(j=>j.parent === v.id) ) // categories
-	// base.filter((v,i,a) => !a.find(j=>j.parent === v.id) ) // not category
+	// types.filter((v,i,a) => v.parent === '#' && a.find(j=>j.parent === v.id) ) // categories
+	// types.filter((v,i,a) => !a.find(j=>j.parent === v.id) ) // not category
 	return dd;
 }
