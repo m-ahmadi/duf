@@ -28,8 +28,9 @@ $(async function () {
 	const jtree = $jtreeEl.jstree(true);
 	let i = -1;
 	
-	$jtreeEl.on('changed.jstree', function (e, data) {
+	$jtreeEl.on('changed.jstree', function (e, _data) {
 		// el.jstree('rename_node', '1', 'new text')
+		search( input.val() );
 	});
 	
 	// focus on mouse move and select item on mousedown
@@ -66,13 +67,6 @@ $(async function () {
 		lis.removeClass(cFocus).eq(i).addClass(cFocus)[0].scrollIntoView({block: 'end'});
 	});
 	
-	const allRows = data.filter(i=>jtree.get_selected().includes(''+i[2])).map(i=>`
-		<li data-val="${i[0]}">
-			<div>${i[0]}</div>
-			<div>${i[1]}</div>
-		</li>
-	`);
-	
 	// open & close on focus & blur
 	input
 		// .on('blur', close)
@@ -81,20 +75,26 @@ $(async function () {
 			const v = this.value;
 			if (v === '') {
 				open();
-				ul.html(allRows);
+				search();
 			}
 			if (v.length > 1) {
-				const res = data.filter( i => i.join(' ').includes(v) && jtree.get_selected().includes(i[2]) );
-				const rgx = new RegExp(escRgx(v), 'g');
-				const replaceWith = `<span class="query">${v}</span>`;
-				ul.html(res.map(i=>`
-					<li data-val="${i[0]}">
-						<div>${i[0].replace(rgx, replaceWith)}</div>
-						<div>${i[1].replace(rgx, replaceWith)}</div>
-					</li>
-				`));
+				search(v);
 			}
 		}, 100));
+	
+	function search(query) {
+		const res = query
+			? data.filter( i => i.slice(0,2).join(' ').includes(query) && jtree.get_selected().includes(i[2]) )
+			: data.filter( i => jtree.get_selected().includes(i[2]) );
+		const rgx         = query ? new RegExp(escRgx(query), 'g')        : undefined;
+		const replaceWith = query ? `<span class="query">${query}</span>` : undefined;
+		ul.html(res.map(i=>`
+			<li data-val="${i[0]}">
+				<div>${query ? i[0].replace(rgx, replaceWith) : i[0]}</div>
+				<div>${query ? i[1].replace(rgx, replaceWith) : i[1]}</div>
+			</li>
+		`));
+	}
 	
 	function reset() {
 		i = -1;
@@ -113,7 +113,7 @@ $(async function () {
 		$jtreeEl.toggleClass('slide');
 	});
 	
-	function escRgx(str) {
+	function escRgx(str='') {
 		return str.replace(/[|\\{}()[\]^$+*?.-]/g, '\\$&');
 	}
 	
@@ -134,12 +134,3 @@ $(async function () {
 	
 	input.trigger('change')
 });
-/* $('.combo').on('click', function (e) {
-		const { target } = e;
-		if (target.tagName === 'TD') {
-			input.val( target.innerHTML );
-			close();
-		} else if (target !== input[0]) {
-			close();
-		}
-	}); */

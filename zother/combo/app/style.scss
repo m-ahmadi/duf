@@ -2,7 +2,7 @@ body {
 	font-family: "Segoe UI";
 }
 
-$input-width: 400px;
+$input-width: 500px;
 $border-color: #b0b0b0;
 
 .combo {
@@ -63,8 +63,8 @@ $border-color: #b0b0b0;
 			font-size: 0.9rem;
 			&:last-child { border-bottom: 0; }
 			> div { float: right; }
-			> div:first-child { width: 30%; }
-			> div:last-child { width: 70%; font-size: 0.8rem; line-height: 1.5rem;  }
+			> div:first-child { width: 45%; padding-right: 5px; }
+			> div:last-child { width: 55%; font-size: 0.8rem; line-height: 1.5rem;  }
 		}
 	}
 	
@@ -96,7 +96,7 @@ $border-color: #b0b0b0;
 		font-size: 0.9rem;
 		overflow-x: scroll;
 		border: 1px solid #e3e3e3;
-		background: #ffffd3;
+		background: #ffffc9;
 		transition: width 50ms;
 		small {
 			font-size: 0.67rem;

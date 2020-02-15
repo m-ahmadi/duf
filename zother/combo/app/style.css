@@ -3,7 +3,7 @@ body {
 }
 
 .combo {
-  width: 400px;
+  width: 500px;
   position: relative;
   /* table:nth-child(4) {
   	position: absolute;
@@ -70,10 +70,11 @@ body {
   float: right;
 }
 .combo ul:nth-child(4) > li > div:first-child {
-  width: 30%;
+  width: 45%;
+  padding-right: 5px;
 }
 .combo ul:nth-child(4) > li > div:last-child {
-  width: 70%;
+  width: 55%;
   font-size: 0.8rem;
   line-height: 1.5rem;
 }
@@ -97,13 +98,13 @@ body {
 .combo .jtree {
   position: absolute;
   top: 0;
-  right: 400px;
+  right: 500px;
   width: 350px;
   height: 310px;
   font-size: 0.9rem;
   overflow-x: scroll;
   border: 1px solid #e3e3e3;
-  background: #ffffd3;
+  background: #ffffc9;
   transition: width 50ms;
 }
 .combo .jtree small {
