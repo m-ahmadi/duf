@@ -4,7 +4,9 @@ package-lock.json
 .livereload
 .rtlcssrc
 html/link-modulepreload/*
+!html/link-modulepreload/root.htm
 html/script-app/*
+!html/script-app/root.htm
 public/lib/_templates.js
 public/lib/_partials.js
 public/js/#.js
