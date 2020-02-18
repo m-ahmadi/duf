@@ -6,8 +6,7 @@ window.log = console.log;
 
 $(async function () {
 	const ins = await instruments();
-	const $jtreeEl = await tree(ins);
-	
+	const [$jtreeEl, jd] = await tree(ins);
 	/* var x = [
 		{ id: 0, parent: '#', text: 'عمومی - مشترک بین بورس و فرابورس' },
 		{ id: 1, parent: '#', text: 'بورس' },
@@ -26,14 +25,13 @@ $(async function () {
 	
 	// const data = ins.map(i => [i.Symbol, i.Name]);
 	const data = ins
-		.map(i => [
-			cleanFa(i.Symbol), // i.Symbol
-			cleanFa(i.Name),   // i.Name
-			''+i.YVal
-		])
-		.sort((a,b) => a[0].localeCompare(b[0], 'fa'));
-	
-	window.ins = ins;
+		.map(i => ({
+			Symbol: cleanFa(i.Symbol), // i.Symbol
+			Name: cleanFa(i.Name),     // i.Name
+			YVal: ''+i.YVal,
+			Flow: ''+i.Flow
+		}))
+		.sort((a,b) => a.Symbol.localeCompare(b.Symbol, 'fa'));
 	
 	const cFocus = 'focus';
 	const cHide = 'hide';
@@ -45,9 +43,27 @@ $(async function () {
 	const jtree = $jtreeEl.jstree(true);
 	let i = -1;
 	
+	const allFilterNodes = jd
+		.map(i => ({id: i.id, root: jtree.get_path(i.id, undefined, true)[0]}) )
+		.reduce((a,c)=> a[c.root].push(c.id) && a, [null,[],[]]); // 1=Flow 2=YVal
+	const FlowNodes = allFilterNodes[1];
+	const YValNodes = allFilterNodes[2];
+	
 	$jtreeEl.on('changed.jstree', function (e, _data) {
 		// el.jstree('rename_node', '1', 'new text')
-		search( input.val() );
+		
+		const { selected, node } = _data;
+		const YValFilters = [], FlowFilters = [];
+		if (selected.length) {
+			for (const id of selected) {
+				if ( YValNodes.includes(id) ) {
+					YValFilters.push(id);
+				} else if ( FlowNodes.includes(id) ) {
+					FlowFilters.push(id-100+''); // (due to the 100 added to their ids to avoid conflict)
+				}
+			}
+		}
+		search(input.val(), YValFilters, FlowFilters);
 	});
 	
 	// focus on mouse move and select item on mousedown
@@ -99,16 +115,30 @@ $(async function () {
 			}
 		}, 100));
 	
-	function search(query) {
-		const res = query
-			? data.filter( i => i.slice(0,2).join(' ').includes(query) && jtree.get_selected().includes(i[2]) )
-			: data.filter( i => jtree.get_selected().includes(i[2]) );
+	function search(query, YValFilters=[], FlowFilters=[]) {
+		const ylen = YValFilters.length;
+		const flen = FlowFilters.length;
+		let predicate;
+		if (query) {
+			predicate = 
+				ylen  && flen  ? i => `${i.Symbol} ${i.Name}`.includes(query) && YValFilters.includes(i.YVal) && FlowFilters.includes(i.Flow) :
+				ylen  && !flen ? i => `${i.Symbol} ${i.Name}`.includes(query) && YValFilters.includes(i.YVal) :
+				!ylen && flen  ? i => `${i.Symbol} ${i.Name}`.includes(query) && FlowFilters.includes(i.Flow) :
+				!ylen && !flen ? i => `${i.Symbol} ${i.Name}`.includes(query) : undefined;
+		} else {
+			predicate = 
+				ylen  && flen  ? i => YValFilters.includes(i.YVal) && FlowFilters.includes(i.Flow) :
+				ylen  && !flen ? i => YValFilters.includes(i.YVal) :
+				!ylen && flen  ? i => FlowFilters.includes(i.Flow) :
+				!ylen && !flen ? 'none' : undefined;
+		}
+		const res = predicate === 'none' ? data : data.filter(predicate);
 		const rgx         = query ? new RegExp(escRgx(query), 'g')        : undefined;
 		const replaceWith = query ? `<span class="query">${query}</span>` : undefined;
 		ul.html(res.map(i=>`
-			<li data-val="${i[0]}">
-				<div>${query ? i[0].replace(rgx, replaceWith) : i[0]}</div>
-				<div>${query ? i[1].replace(rgx, replaceWith) : i[1]}</div>
+			<li data-val="${i.Symbol}">
+				<div>${query ? i.Symbol.replace(rgx, replaceWith) : i.Symbol}</div>
+				<div>${query ? i.Name.replace(rgx, replaceWith) : i.Name}</div>
 			</li>
 		`));
 	}

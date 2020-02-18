@@ -81,7 +81,7 @@ export default function (ins) {
 			// el.jstree('rename_node', '1', 'new text')
 		})
 		.on('ready.jstree', function () {
-			resolve($el);
+			resolve([$el, jd]);
 		});
 	});
 }
