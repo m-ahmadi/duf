@@ -6,6 +6,7 @@ window.log = console.log;
 
 $(async function () {
 	const ins = await instruments();
+	window.ins = ins;
 	const [$jtreeEl, jd] = await tree(ins);
 	/* var x = [
 		{ id: 0, parent: '#', text: 'عمومی - مشترک بین بورس و فرابورس' },
@@ -59,7 +60,7 @@ $(async function () {
 				if ( YValNodes.includes(id) ) {
 					YValFilters.push(id);
 				} else if ( FlowNodes.includes(id) ) {
-					FlowFilters.push(id-100+''); // (due to the 100 added to their ids to avoid conflict)
+					FlowFilters.push(id-100+''); // (cuz I added 100 to these ids to avoid id conflict)
 				}
 			}
 		}
@@ -132,9 +133,10 @@ $(async function () {
 				!ylen && flen  ? i => FlowFilters.includes(i.Flow) :
 				!ylen && !flen ? 'none' : undefined;
 		}
-		const res = predicate === 'none' ? data : data.filter(predicate);
+		const res = predicate === 'none' ? [] : data.filter(predicate);
 		const rgx         = query ? new RegExp(escRgx(query), 'g')        : undefined;
 		const replaceWith = query ? `<span class="query">${query}</span>` : undefined;
+		
 		ul.html(res.map(i=>`
 			<li data-val="${i.Symbol}">
 				<div>${query ? i.Symbol.replace(rgx, replaceWith) : i.Symbol}</div>
