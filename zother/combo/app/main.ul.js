@@ -8,21 +8,6 @@ $(async function () {
 	const ins = await instruments();
 	window.ins = ins;
 	const [$jtreeEl, jd] = await tree(ins);
-	/* var x = [
-		{ id: 0, parent: '#', text: 'عمومی - مشترک بین بورس و فرابورس' },
-		{ id: 1, parent: '#', text: 'بورس' },
-		{ id: 2, parent: '#', text: 'فرابورس' },
-		{ id: 3, parent: '#', text: 'آتی' },
-		{ id: 4, parent: '#', text: 'پایه فرابورس' },
-		{ id: 5, parent: '#', text: 'پایه فرابورس - منتشر نمی شود' },
-		{ id: 6, parent: '#', text: 'بورس انرژی' },
-		{ id: 7, parent: '#', text: 'بورس کالا' }
-	];
-	$('#jtree2').jstree({
-		core: {data: x},
-		plugins: ['checkbox']
-	}); */
-	
 	
 	// const data = ins.map(i => [i.Symbol, i.Name]);
 	const data = ins
