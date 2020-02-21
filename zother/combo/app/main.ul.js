@@ -26,29 +26,13 @@ $(async function () {
 	
 	const xToggle = $('.combo span:nth-child(3)');
 	const filterToggle = $('.combo > svg:nth-child(2)');
-	const jtree = $jtreeEl.jstree(true);
+	const jtree = $jtreeEl.jstree(true);window.jtree = jtree;
 	let i = -1;
-	
-	const allFilterNodes = jd
-		.map(i => ({id: i.id, root: jtree.get_path(i.id, undefined, true)[0]}) )
-		.reduce((a,c)=> a[c.root].push(c.id) && a, [null,[],[]]); // 1=Flow 2=YVal
-	const FlowNodes = allFilterNodes[1];
-	const YValNodes = allFilterNodes[2];
 	
 	$jtreeEl.on('changed.jstree', function (e, _data) {
 		// el.jstree('rename_node', '1', 'new text')
-		
 		const { selected, node } = _data;
-		const YValFilters = [], FlowFilters = [];
-		if (selected.length) {
-			for (const id of selected) {
-				if ( YValNodes.includes(id) ) {
-					YValFilters.push(id);
-				} else if ( FlowNodes.includes(id) ) {
-					FlowFilters.push(id-100+''); // (cuz I added 100 to these ids to avoid id conflict)
-				}
-			}
-		}
+		const [YValFilters, FlowFilters] = getFilters(selected);
 		search(input.val(), YValFilters, FlowFilters);
 	});
 	
@@ -94,12 +78,31 @@ $(async function () {
 			const v = this.value;
 			if (v === '') {
 				open();
-				search();
+				search( undefined, ...getFilters(jtree.get_selected()) );
 			}
 			if (v.length > 1) {
-				search(v);
+				search( v, ...getFilters(jtree.get_selected()) );
 			}
 		}, 100));
+	
+	const allFilterNodes = jd
+		.map(i => ({id: i.id, root: jtree.get_path(i.id, undefined, true)[0]}) )
+		.reduce((a,c)=> a[c.root].push(c.id) && a, [null,[],[]]); // 1=Flow 2=YVal
+	const FlowNodes = allFilterNodes[1];
+	const YValNodes = allFilterNodes[2];
+	function getFilters(selected) {
+		const YValFilters = [], FlowFilters = [];
+		if (selected.length) {
+			for (const id of selected) {
+				if ( YValNodes.includes(id) ) {
+					YValFilters.push(id);
+				} else if ( FlowNodes.includes(id) ) {
+					FlowFilters.push(id-100+''); // (cuz I added 100 to these ids to avoid id conflict)
+				}
+			}
+		}
+		return [YValFilters, FlowFilters];
+	}
 	
 	function search(query, YValFilters=[], FlowFilters=[]) {
 		const ylen = YValFilters.length;
@@ -121,6 +124,8 @@ $(async function () {
 		const res = predicate === 'none' ? [] : data.filter(predicate);
 		const rgx         = query ? new RegExp(escRgx(query), 'g')        : undefined;
 		const replaceWith = query ? `<span class="query">${query}</span>` : undefined;
+		
+		res.sort(a => a.Symbol.includes(query) ? -1 : 1);
 		
 		ul.html(res.map(i=>`
 			<li data-val="${i.Symbol}">
@@ -151,11 +156,7 @@ $(async function () {
 		return str.replace(/[|\\{}()[\]^$+*?.-]/g, '\\$&');
 	}
 	
-	function cleanFa(str) { /*
-		\u200B zero-width space
-		\u200C zero-width non-joiner
-		\u200D zero-width joiner
-		\uFEFF zero-width no-break space */
+	function cleanFa(str) {
 		return str
 			// .replace(/[\u200B-\u200D\uFEFF]/g, ' ')
 			.replace(/\u200B/g, '')        // zero-width space
