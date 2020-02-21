@@ -20,17 +20,25 @@ function transformData(ins) {
 	
 	// merge 1-child categories:
 	dd
-		.filter(i => i.parent === '#' && dd.filter(j=>j.parent===i.id).length === 1)
+		.filter(i => dd.filter(j=>j.parent===i.id).length === 1)
 		.map( i=> dd.findIndex(j=>j.id===i.id) )
 		.forEach(i => {
-			dd.find(j => j.parent === dd[i].id).parent = '#';
+			dd.filter(j=>j.parent===dd[i].id).forEach(j=>j.parent = dd[i].parent);
 			dd.splice(i, 1);
 		});
 	
-	// put child-less root-nodes at end:
-	const childless = dd.filter(i => i.parent === '#' && !dd.filter(j=>j.parent===i.id).length);
-	childless.map( i => dd.splice(dd.findIndex(j=>j.id===i.id), 1) );
-	dd = dd.concat(childless);
+	// place child-less nodes with a category sibling at end:
+	const childlessWithCatSibling = dd
+		.filter(i => !dd.filter(j=>j.parent===i.id).length)                                // childless nodes
+		.map(i => [i, dd.filter(j=>j.parent===i.parent && j.id!==i.id)] )                  // ... siblings
+		.filter(i=> i[1].map(j=> dd.filter(k=>k.parent===j.id).length).reduce((a,c)=>a+c)) // ... siblings that have children
+		.map(i => i[0]);
+	
+	childlessWithCatSibling.forEach( i => dd.splice(dd.findIndex(j=>j.id===i.id), 1) );
+	dd = dd.concat(childlessWithCatSibling);
+	// const childless = dd.filter(i => !dd.filter(j=>j.parent===i.id).length);
+	// childless.forEach( i => dd.splice(dd.findIndex(j=>j.id===i.id), 1) );
+	// dd = dd.concat(childless);
 	
 	// types.filter((v,i,a) => v.parent === '#' && a.find(j=>j.parent === v.id) ) // categories
 	// types.filter((v,i,a) => !a.find(j=>j.parent === v.id) ) // not category
@@ -38,10 +46,8 @@ function transformData(ins) {
 }
 function countCats(arr) {
 	const cats = arr.filter(i=> arr.filter(j=>j.parent===i.id).length ); // nodes that have children
-	
 	const nonRoots = cats.filter(i=>i.parent!=='#');
 	const roots = cats.filter(i=>i.parent==='#');
-	
 	const count = cat => {
 		cat.forEach(i =>
 			i.count = arr
@@ -62,7 +68,7 @@ function finalData(baseData) {
 		parent: ''+i.parent,
 		// state: { opened: true },
 		// ...i.id === 300 && {state: { selected: true }}, // tmp, preselect one category
-		...i.parent !== '#' && {icon: 'jstree-file'} // file icon for childs
+		...!baseData.filter(j=>j.parent===i.id).length && {icon: 'jstree-file'} // file icon for childs
 	}));
 	// change icon of child-less root-nodes:
 	// jd.filter(i => i.parent === '#' && !jd.filter(j=>j.parent===i.id).length)
