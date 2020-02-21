@@ -36,9 +36,9 @@ function transformData(ins) {
 	
 	childlessWithCatSibling.forEach( i => dd.splice(dd.findIndex(j=>j.id===i.id), 1) );
 	dd = dd.concat(childlessWithCatSibling);
-	// const childless = dd.filter(i => !dd.filter(j=>j.parent===i.id).length);
-	// childless.forEach( i => dd.splice(dd.findIndex(j=>j.id===i.id), 1) );
-	// dd = dd.concat(childless);
+	/* const childless = dd.filter(i => !dd.filter(j=>j.parent===i.id).length);
+	childless.forEach( i => dd.splice(dd.findIndex(j=>j.id===i.id), 1) );
+	dd = dd.concat(childless); */
 	
 	// types.filter((v,i,a) => v.parent === '#' && a.find(j=>j.parent === v.id) ) // categories
 	// types.filter((v,i,a) => !a.find(j=>j.parent === v.id) ) // not category
@@ -66,9 +66,9 @@ function finalData(baseData) {
 		id: ''+i.id,
 		text: `${i.node} <small>(${i.count})</small>`,
 		parent: ''+i.parent,
-		// state: { opened: true },
-		// ...i.id === 300 && {state: { selected: true }}, // tmp, preselect one category
-		...!baseData.filter(j=>j.parent===i.id).length && {icon: 'jstree-file'} // file icon for childs
+		// state: {opened: true},
+		...i.id === 3 && {state: { selected: true }}, // tmp, preselect one category
+		...!baseData.filter(j=>j.parent===i.id).length && {icon: 'hide'} // hide jstree-file
 	}));
 	// change icon of child-less root-nodes:
 	// jd.filter(i => i.parent === '#' && !jd.filter(j=>j.parent===i.id).length)
@@ -95,6 +95,7 @@ export default function (ins) {
 			// el.jstree('rename_node', '1', 'new text')
 		})
 		.on('ready.jstree', function () {
+			$el.jstree('close_node', '3')
 			resolve([$el, jd]);
 		});
 	});
