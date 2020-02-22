@@ -126,6 +126,7 @@ $(async function () {
 		const replaceWith = query ? `<span class="query">${query}</span>` : undefined;
 		
 		res.sort(a => a.Symbol.includes(query) ? -1 : 1);
+		res.sort(a => new RegExp(`^${query}$`).test(a.Symbol) ? -1 : 1);
 		
 		ul.html(res.map(i=>`
 			<li data-val="${i.Symbol}">
