@@ -28,12 +28,12 @@ $(async function () {
 	const filterToggle = $('.combo > svg:nth-child(2)');
 	const jtree = $jtreeEl.jstree(true);window.jtree = jtree;
 	let i = -1;
+	let uSelect;
 	
 	$jtreeEl.on('changed.jstree', function (e, _data) {
 		// el.jstree('rename_node', '1', 'new text')
 		const { selected, node } = _data;
-		const [YValFilters, FlowFilters] = getFilters(selected);
-		search(input.val(), YValFilters, FlowFilters);
+		search( input.val(), ...getFilters(selected) );
 	});
 	
 	// focus on mouse move and select item on mousedown
@@ -47,7 +47,9 @@ $(async function () {
 		$(this).removeClass(cFocus);
 	})
 	.on('mousedown', 'li', function ({which}) {
-		input.val(this.dataset.val);
+		const val = this.dataset.val;
+		uSelect = val;
+		input.val(val);
 		close();
 	});
 	
@@ -56,44 +58,67 @@ $(async function () {
 		const key = e.which;
 		if (key !== 38 && key !== 40 && key !== 13 && key !== 27) return;
 		if (key === 13) { // enter
-			input.val( $('> li.focus', ul).data('val') );
+			const focusVal = $('li.focus', ul).data('val');
+			uSelect = focusVal;
+			input.val(focusVal);
 			close();
 			return;
 		} else if (key === 27) { // esc
-			input.val('');
+			uSelect = undefined;
+			input.val('').trigger('change');
 			return;
 		}
 		const lis = $('li', ul);
 		const inc = key === 38 ? -1 : key === 40 ? 1 : 0; // 38=up 40=down
 		i += inc;
 		i = i > lis.length-1 ? 0 : i < 0 ? lis.length-1 : i;
-		lis.removeClass(cFocus).eq(i).addClass(cFocus)[0].scrollIntoView({block: 'end'});
+		focus();
 	});
 	
 	// open & close on focus & blur
 	input
-		// .on('blur', close)
+		.on('blur', close)
 		.on('focus', open)
 		.on('input change', _debounce(function () {
+			i = -1;
 			const v = this.value;
 			if (v === '') {
 				open();
 				search( undefined, ...getFilters(jtree.get_selected()) );
-			}
-			if (v.length > 1) {
+			} else if (v.length > 1) {
 				search( v, ...getFilters(jtree.get_selected()) );
 			}
 		}, 100));
+	
+	function focus() {
+		$('li', ul).removeClass(cFocus).eq(i).addClass(cFocus)[0].scrollIntoView({block: 'end'});
+	}
+	function reset() {
+		i = -1;
+		$('li', ul).removeClass(cFocus);
+	}
+	function open() {
+		reset();
+		if ( ul.hasClass(cHide) ) ul.removeClass(cHide);
+		if (uSelect) {
+			i = $(`li[data-val="${uSelect}"]`, ul).index();
+			focus();
+		}
+	}
+	function close() {
+		reset();
+		if ( !ul.hasClass(cHide) ) ul.addClass(cHide);
+	}
 	
 	const allFilterNodes = jd
 		.map(i => ({id: i.id, root: jtree.get_path(i.id, undefined, true)[0]}) )
 		.reduce((a,c)=> a[c.root].push(c.id) && a, [null,[],[]]); // 1=Flow 2=YVal
 	const FlowNodes = allFilterNodes[1];
 	const YValNodes = allFilterNodes[2];
-	function getFilters(selected) {
+	function getFilters(selection) {
 		const YValFilters = [], FlowFilters = [];
-		if (selected.length) {
-			for (const id of selected) {
+		if (selection.length) {
+			for (const id of selection) {
 				if ( YValNodes.includes(id) ) {
 					YValFilters.push(id);
 				} else if ( FlowNodes.includes(id) ) {
@@ -136,19 +161,6 @@ $(async function () {
 		`));
 	}
 	
-	function reset() {
-		i = -1;
-		$('li', ul).removeClass(cFocus);
-	}
-	function open() {
-		reset();
-		if ( ul.hasClass(cHide) ) ul.removeClass(cHide);
-	}
-	function close() {
-		reset();
-		if ( !ul.hasClass(cHide) ) ul.addClass(cHide);
-	}
-	
 	filterToggle.on('click', function () {
 		$jtreeEl.toggleClass('slide');
 	});
@@ -168,5 +180,5 @@ $(async function () {
 			.replace(/ي/g,'ی');
 	}
 	
-	input.trigger('change')
+	// search( undefined, ...getFilters(jtree.get_selected()) );
 });
