@@ -33,6 +33,7 @@ $(async function () {
 	$jtreeEl.on('changed.jstree', function (e, _data) {
 		// el.jstree('rename_node', '1', 'new text')
 		const { selected, node } = _data;
+		open();
 		search( input.val(), ...getFilters(selected) );
 	});
 	
@@ -53,8 +54,9 @@ $(async function () {
 		close();
 	});
 	
-	// nav on up/down arrow, select on enter, clear on esc.
-	input.on('keydown', function (e) {
+	// nav on up/down arrow, select on enter, clear on esc. open/close on focus/blur.
+	input
+	.on('keydown', function (e) {
 		const key = e.which;
 		if (key !== 38 && key !== 40 && key !== 13 && key !== 27) return;
 		if (key === 13) { // enter
@@ -65,7 +67,7 @@ $(async function () {
 			return;
 		} else if (key === 27) { // esc
 			uSelect = undefined;
-			input.val('').trigger('change');
+			input.val('').trigger('input');
 			return;
 		}
 		const lis = $('li', ul);
@@ -73,41 +75,37 @@ $(async function () {
 		i += inc;
 		i = i > lis.length-1 ? 0 : i < 0 ? lis.length-1 : i;
 		focus();
-	});
-	
-	// open & close on focus & blur
-	input
-		.on('blur', close)
-		.on('focus', open)
-		.on('input change', _debounce(function () {
-			i = -1;
-			const v = this.value;
-			if (v === '') {
-				open();
-				search( undefined, ...getFilters(jtree.get_selected()) );
-			} else if (v.length > 1) {
-				search( v, ...getFilters(jtree.get_selected()) );
-			}
-		}, 100));
+	})
+	.on('blur', close)
+	.on('focus', open)
+	.on('input', _debounce(function (e) {
+		i = -1;
+		const v = this.value;
+		if ( isClosed() ) open();
+		if (v === '') {
+			search( undefined, ...getFilters(jtree.get_selected()) );
+		} else if (v.length > 1) {
+			search( v, ...getFilters(jtree.get_selected()) );
+		}
+	}, 100));
 	
 	function focus() {
 		$('li', ul).removeClass(cFocus).eq(i).addClass(cFocus)[0].scrollIntoView({block: 'end'});
 	}
-	function reset() {
+	function open() {
 		i = -1;
 		$('li', ul).removeClass(cFocus);
-	}
-	function open() {
-		reset();
-		if ( ul.hasClass(cHide) ) ul.removeClass(cHide);
+		if ( isClosed() ) ul.removeClass(cHide);
 		if (uSelect) {
 			i = $(`li[data-val="${uSelect}"]`, ul).index();
 			focus();
 		}
 	}
 	function close() {
-		reset();
-		if ( !ul.hasClass(cHide) ) ul.addClass(cHide);
+		if ( !isClosed() ) ul.addClass(cHide);
+	}
+	function isClosed() {
+		return ul.hasClass(cHide);
 	}
 	
 	const allFilterNodes = jd
@@ -165,20 +163,24 @@ $(async function () {
 		$jtreeEl.toggleClass('slide');
 	});
 	
-	function escRgx(str='') {
-		return str.replace(/[|\\{}()[\]^$+*?.-]/g, '\\$&');
-	}
 	
-	function cleanFa(str) {
-		return str
-			// .replace(/[\u200B-\u200D\uFEFF]/g, ' ')
-			.replace(/\u200B/g, '')        // zero-width space
-			.replace(/\s?\u200C\s?/g, ' ') // zero-width non-joiner
-			.replace(/\u200D/g, '')        // zero-width joiner
-			.replace(/\uFEFF/g, '')        // zero-width no-break space
-			.replace(/ك/g,'ک')
-			.replace(/ي/g,'ی');
-	}
-	
+	xToggle.on('click', function () {
+		input.val('').trigger('input');
+	});
 	// search( undefined, ...getFilters(jtree.get_selected()) );
 });
+
+function escRgx(str='') {
+	return str.replace(/[|\\{}()[\]^$+*?.-]/g, '\\$&');
+}
+
+function cleanFa(str) {
+	return str
+		// .replace(/[\u200B-\u200D\uFEFF]/g, ' ')
+		.replace(/\u200B/g, '')        // zero-width space
+		.replace(/\s?\u200C\s?/g, ' ') // zero-width non-joiner
+		.replace(/\u200D/g, '')        // zero-width joiner
+		.replace(/\uFEFF/g, '')        // zero-width no-break space
+		.replace(/ك/g,'ک')
+		.replace(/ي/g,'ی');
+}
