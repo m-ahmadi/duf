@@ -39,9 +39,8 @@ $(async function () {
 	
 	ul // focus on mouse move and select item on mousedown
 	.on('mouseenter', 'li', function () {
-		i	 = $(this).index();
 		$('li', ul).removeClass(cFocus);
-		$(this).addClass(cFocus);
+		i = $(this).addClass(cFocus).index();
 	})
 	.on('mouseleave', 'li', function () {
 		$(this).removeClass(cFocus);
@@ -53,7 +52,20 @@ $(async function () {
 		close();
 	});
 	
-	input // nav on up/down arrow, select on enter, clear on esc. open/close on focus/blur.
+	input // open/close on focus/blur, nav on up/down arrow, select on enter, clear on esc, change ul on input.
+	.on('blur', close)
+	.on('focus', open)
+	.on('input', debounce(function (e) {
+		i = -1;
+		const v = this.value;
+		if ( isClosed() ) open();
+		if (v === '') {
+			search( undefined, ...getFilters(jtree.get_selected()) );
+			$('li:first-child', ul)[0].scrollIntoView({block: 'nearest'});
+		} else if (v.length > 1) {
+			search( v, ...getFilters(jtree.get_selected()) );
+		}
+	}, 100))
 	.on('keydown', function (e) {
 		const key = e.which;
 		if (key !== 38 && key !== 40 && key !== 13 && key !== 27) return;
@@ -73,22 +85,10 @@ $(async function () {
 		i += inc;
 		i = i > lis.length-1 ? 0 : i < 0 ? lis.length-1 : i;
 		focus();
-	})
-	.on('blur', close)
-	.on('focus', open)
-	.on('input', _debounce(function (e) {
-		i = -1;
-		const v = this.value;
-		if ( isClosed() ) open();
-		if (v === '') {
-			search( undefined, ...getFilters(jtree.get_selected()) );
-		} else if (v.length > 1) {
-			search( v, ...getFilters(jtree.get_selected()) );
-		}
-	}, 100));
+	});
 	
 	function focus() {
-		$('li', ul).removeClass(cFocus).eq(i).addClass(cFocus)[0].scrollIntoView({block: 'end'});
+		$('li', ul).removeClass(cFocus).eq(i).addClass(cFocus)[0].scrollIntoView({block: 'nearest'});
 	}
 	function open() {
 		i = -1;
@@ -187,4 +187,12 @@ function cleanFa(str) {
 		.replace(/\uFEFF/g, '')        // zero-width no-break space
 		.replace(/ك/g,'ک')
 		.replace(/ي/g,'ی');
+}
+
+function debounce(fn, wait) {
+	let timeout
+	return function (...args) {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => fn.apply(this, args), wait);
+	};
 }
