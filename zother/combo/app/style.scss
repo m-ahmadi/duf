@@ -63,8 +63,9 @@ $border-color: #b0b0b0;
 			font-size: 0.9rem;
 			&:last-child { border-bottom: 0; }
 			> div { float: right; }
-			> div:first-child { width: 45%; padding-right: 5px; }
-			> div:last-child { width: 55%; font-size: 0.8rem; line-height: 1.5rem;  }
+			> div:first-child { width: 35%; padding-right: 5px; }
+			> div:nth-child(2) { width: 50%; font-size: 0.8rem; line-height: 1.5rem;  }
+			> div:last-child { width: 15%; font-size: 0.7rem; line-height: 1.6rem; color: grey; }
 		}
 	}
 	

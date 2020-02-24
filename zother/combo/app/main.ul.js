@@ -37,8 +37,7 @@ $(async function () {
 		search( input.val(), ...getFilters(selected) );
 	});
 	
-	// focus on mouse move and select item on mousedown
-	ul
+	ul // focus on mouse move and select item on mousedown
 	.on('mouseenter', 'li', function () {
 		i	 = $(this).index();
 		$('li', ul).removeClass(cFocus);
@@ -54,8 +53,7 @@ $(async function () {
 		close();
 	});
 	
-	// nav on up/down arrow, select on enter, clear on esc. open/close on focus/blur.
-	input
+	input // nav on up/down arrow, select on enter, clear on esc. open/close on focus/blur.
 	.on('keydown', function (e) {
 		const key = e.which;
 		if (key !== 38 && key !== 40 && key !== 13 && key !== 27) return;
@@ -151,12 +149,14 @@ $(async function () {
 		res.sort(a => a.Symbol.includes(query) ? -1 : 1);
 		res.sort(a => new RegExp(`^${query}$`).test(a.Symbol) ? -1 : 1);
 		
-		ul.html(res.map(i=>`
+		const FlowNames = [undefined, 'بورس', 'فرابورس', undefined, 'پایه فرابورس'];
+		ul.html(res.map(i => `
 			<li data-val="${i.Symbol}">
 				<div>${query ? i.Symbol.replace(rgx, replaceWith) : i.Symbol}</div>
 				<div>${query ? i.Name.replace(rgx, replaceWith) : i.Name}</div>
+				<div>${ FlowNames[i.Flow] }</div>
 			</li>
-		`));
+		`).join(''));
 	}
 	
 	filterToggle.on('click', function () {
@@ -167,7 +167,7 @@ $(async function () {
 	xToggle.on('click', function () {
 		input.val('').trigger('input');
 	});
-	// search( undefined, ...getFilters(jtree.get_selected()) );
+	search( undefined, ...getFilters(jtree.get_selected()) );
 });
 
 function escRgx(str='') {
