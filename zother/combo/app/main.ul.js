@@ -146,8 +146,12 @@ $(async function () {
 		const rgx         = query ? new RegExp(escRgx(query), 'g')        : undefined;
 		const replaceWith = query ? `<span class="query">${query}</span>` : undefined;
 		
-		res.sort(a => a.Symbol.includes(query) ? -1 : 1);
-		res.sort(a => new RegExp(`^${query}$`).test(a.Symbol) ? -1 : 1);
+		if (query) {
+			res.sort(a => a.Symbol.includes(query) ? -1 : 1);
+			res.sort(a => new RegExp(`^${query}$`).test(a.Symbol) ? -1 : 1);
+		} else {
+			res.sort((a,b) => a.Symbol.localeCompare(b.Symbol, 'fa'), );
+		}
 		
 		const FlowNames = [undefined, 'بورس', 'فرابورس', undefined, 'پایه فرابورس'];
 		ul.html(res.map(i => `
