@@ -3,47 +3,19 @@ body {
 }
 
 .combo {
+  z-index: 999;
   width: 500px;
   position: relative;
-  /* table:nth-child(4) {
-  	position: absolute;
-  	top: 23px;
-  	width: 100%;
-  	border: 1px solid grey;
-  	border-top: none;
-  	border-spacing: 0;
-  	tbody {
-  		display: block;
-  		padding:0;
-  		height: 90vh;
-  		overflow-y: scroll;
-  	}
-  	td {
-  		font-size: 0.9rem;
-  		border-width: 0 0 1px;
-  		border-style: solid;
-  		border-color: grey;
-  	}
-  	tr:last-child td { border-bottom: 0; }
-  	td:first-child { width: 20%; }
-  	td:last-child { width: 40%; font-size: 0.8rem; }
-  } */
 }
 .combo *, .combo *::before, .combo *::after {
   box-sizing: border-box;
 }
-.combo .focus {
-  background: #0080ff;
-}
-.combo .hide {
-  display: none;
-}
-.combo input {
+.combo > input:first-child {
   position: absolute;
   width: 100%;
   font-family: "Segoe UI";
 }
-.combo ul:nth-child(4) {
+.combo > ul:nth-child(4) {
   position: absolute;
   top: 8px;
   width: 100%;
@@ -55,7 +27,7 @@ body {
   list-style: none;
   padding: 0;
 }
-.combo ul:nth-child(4) > li {
+.combo > ul:nth-child(4) > li {
   float: right;
   width: 100%;
   border-width: 0 0 1px;
@@ -63,43 +35,53 @@ body {
   border-color: #b0b0b0;
   font-size: 0.9rem;
 }
-.combo ul:nth-child(4) > li:last-child {
+.combo > ul:nth-child(4) > li:last-child {
   border-bottom: 0;
 }
-.combo ul:nth-child(4) > li > div {
+.combo > ul:nth-child(4) > li > div {
   float: right;
 }
-.combo ul:nth-child(4) > li > div:first-child {
+.combo > ul:nth-child(4) > li > div:first-child {
   width: 35%;
   padding-right: 5px;
 }
-.combo ul:nth-child(4) > li > div:nth-child(2) {
+.combo > ul:nth-child(4) > li > div:nth-child(2) {
   width: 50%;
   font-size: 0.8rem;
   line-height: 1.5rem;
 }
-.combo ul:nth-child(4) > li > div:last-child {
+.combo > ul:nth-child(4) > li > div:last-child {
   width: 15%;
   font-size: 0.7rem;
   line-height: 1.6rem;
   color: grey;
 }
-.combo span:nth-child(3) {
+.combo > span:nth-child(2) {
   position: absolute;
-  left: 5px;
+  left: 20px;
   cursor: default;
   font-family: initial;
   user-select: none;
   cursor: pointer;
 }
-.combo svg {
+.combo > svg:nth-child(3) {
   position: absolute;
   width: 12px;
   height: 12px;
   top: 5px;
-  left: 20px;
+  left: 5px;
   cursor: pointer;
   z-index: 9;
+}
+.combo .hide {
+  display: none;
+}
+.combo .focus {
+  background: #0080ff;
+}
+.combo .query {
+  background: #ffffbf;
+  line-height: 1.4;
 }
 .combo #jtree {
   position: absolute;
@@ -124,13 +106,9 @@ body {
   margin-right: -4px;
   margin-left: -2px;
 }
-.combo #jtree.slide {
+.combo #jtree.slide-off {
   width: 0;
   border-left: none;
   border-right: none;
   overflow: hidden;
-}
-.combo .query {
-  background: #ffffbf;
-  line-height: 1.4;
 }

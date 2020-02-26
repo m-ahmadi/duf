@@ -7,7 +7,7 @@ window.log = console.log;
 $(async function () {
 	const ins = await instruments();
 	window.ins = ins;
-	const [$jtreeEl, jd] = await tree(ins);
+	const [$jtree, jd] = await tree(ins);
 	
 	// const data = ins.map(i => [i.Symbol, i.Name]);
 	const data = ins
@@ -21,16 +21,19 @@ $(async function () {
 	
 	const cFocus = 'focus';
 	const cHide = 'hide';
+	const cSlideOff = 'slide-off';
 	const input = $('.combo > input:nth-child(1)');
 	const ul = $('.combo > ul:nth-child(4)');
 	
-	const xToggle = $('.combo span:nth-child(3)');
-	const filterToggle = $('.combo > svg:nth-child(2)');
-	const jtree = $jtreeEl.jstree(true);window.jtree = jtree;
+	const xToggle = $('.combo span:nth-child(2)');
+	const filterToggle = $('.combo > svg:nth-child(3)');
+	const jtree = $jtree.jstree(true);window.jtree = jtree;
 	let i = -1;
 	let uSelect;
 	
-	$jtreeEl.on('changed.jstree', function (e, _data) {
+	let treeOpened;
+	
+	$jtree.on('changed.jstree', function (e, _data) {
 		// el.jstree('rename_node', '1', 'new text')
 		const { selected, node } = _data;
 		open();
@@ -55,7 +58,7 @@ $(async function () {
 	input // open/close on focus/blur, nav on up/down arrow, select on enter, clear on esc, change ul on input.
 	.on('blur', close)
 	.on('focus', open)
-	.on('input', debounce(function (e) {
+	.on('input', debounce(function () {
 		i = -1;
 		const v = this.value;
 		if ( isClosed() ) open();
@@ -87,6 +90,16 @@ $(async function () {
 		focus();
 	});
 	
+	// keep input focus if clicks are on x,filter,tree
+	$('.combo')
+		.on('mousedown', '> span:nth-child(2)', prevent)
+		.on('mousedown', '> svg:nth-child(3)', prevent)
+		.on('mousedown', '> #jtree', prevent);
+	
+	$('body').on('click', function (e) {
+		if ( !e.target.closest('.combo') ) close();
+	});
+	
 	function focus() {
 		$('li', ul).removeClass(cFocus).eq(i).addClass(cFocus)[0].scrollIntoView({block: 'nearest'});
 	}
@@ -98,19 +111,19 @@ $(async function () {
 			i = $(`li[data-val="${uSelect}"]`, ul).index();
 			focus();
 		}
+		if (treeOpened) $jtree.removeClass(cSlideOff)
 	}
-	function close() {
+	function close(e) {
 		if ( !isClosed() ) ul.addClass(cHide);
+		$jtree.addClass(cSlideOff);
 	}
 	function isClosed() {
 		return ul.hasClass(cHide);
 	}
 	
-	const allFilterNodes = jd
+	const [, FlowNodes, YValNodes] = jd
 		.map(i => ({id: i.id, root: jtree.get_path(i.id, undefined, true)[0]}) )
 		.reduce((a,c)=> a[c.root].push(c.id) && a, [null,[],[]]); // 1=Flow 2=YVal
-	const FlowNodes = allFilterNodes[1];
-	const YValNodes = allFilterNodes[2];
 	function getFilters(selection) {
 		const YValFilters = [], FlowFilters = [];
 		if (selection.length) {
@@ -164,7 +177,8 @@ $(async function () {
 	}
 	
 	filterToggle.on('click', function () {
-		$jtreeEl.toggleClass('slide');
+		treeOpened = !treeOpened; // toggling
+		$jtree.toggleClass(cSlideOff);
 	});
 	
 	
@@ -173,6 +187,10 @@ $(async function () {
 	});
 	search( undefined, ...getFilters(jtree.get_selected()) );
 });
+
+function prevent(e) {
+	e.preventDefault();
+}
 
 function escRgx(str='') {
 	return str.replace(/[|\\{}()[\]^$+*?.-]/g, '\\$&');

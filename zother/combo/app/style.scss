@@ -7,42 +7,16 @@ $border-color: #b0b0b0;
 
 .combo {
 	*, *::before, *::after { box-sizing: border-box; }
-	.focus { background: #0080ff; }
-	.hide { display: none; }
-	
+	z-index: 999;
 	width: $input-width;
 	position: relative; 
-	input {
+	> input:first-child {
 		position: absolute;
 		width: 100%;
 		font-family: "Segoe UI";
 	}
 	
-	/* table:nth-child(4) {
-		position: absolute;
-		top: 23px;
-		width: 100%;
-		border: 1px solid grey;
-		border-top: none;
-		border-spacing: 0;
-		tbody {
-			display: block;
-			padding:0;
-			height: 90vh;
-			overflow-y: scroll;
-		}
-		td {
-			font-size: 0.9rem;
-			border-width: 0 0 1px;
-			border-style: solid;
-			border-color: grey;
-		}
-		tr:last-child td { border-bottom: 0; }
-		td:first-child { width: 20%; }
-		td:last-child { width: 40%; font-size: 0.8rem; }
-	} */
-	
-	ul:nth-child(4) {
+	> ul:nth-child(4) {
 		position: absolute;
 		top: 8px;
 		width: 100%;
@@ -69,24 +43,28 @@ $border-color: #b0b0b0;
 		}
 	}
 	
-	span:nth-child(3) {
+	> span:nth-child(2) {
 		position: absolute;
-		left: 5px;
+		left: 20px;
 		cursor: default;
 		font-family: initial; // over uk
 		user-select: none;
 		cursor: pointer;
 	}
 	
-	svg {
+	> svg:nth-child(3) {
 		position: absolute;
 		width: 12px;
 		height: 12px;
 		top: 5px;
-		left: 20px;
+		left: 5px;
 		cursor: pointer;
 		z-index: 9;
 	}
+	
+	.hide  { display: none; }
+	.focus { background: #0080ff; }
+	.query { background: #ffffbf; line-height: 1.4; }
 	
 	#jtree {
 		position: absolute;
@@ -112,16 +90,11 @@ $border-color: #b0b0b0;
 			}
 		}
 		
-		&.slide {
+		&.slide-off {
 			width: 0;
 			border-left: none;
 			border-right: none;
 			overflow: hidden;
 		}
-	}
-	
-	.query {
-		background: #ffffbf;
-		line-height: 1.4;
 	}
 }
