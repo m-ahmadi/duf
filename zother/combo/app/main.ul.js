@@ -19,6 +19,12 @@ $(async function () {
 		}))
 		.sort((a,b) => a.Symbol.localeCompare(b.Symbol, 'fa'));
 	
+	const worker = new Worker('app/worker.js');
+	worker.onmessage = function (e) {
+		ul.html(e.data);
+	};
+	worker.postMessage({type:'init', rawData: data});
+	
 	const cFocus = 'focus';
 	const cHide = 'hide';
 	const cSlideOff = 'slide-off';
@@ -149,7 +155,10 @@ $(async function () {
 		return [YValFilters, FlowFilters];
 	}
 	
-	function search(query, YValFilters=[], FlowFilters=[]) {
+	function search(...args) {
+		worker.postMessage(args);
+	}
+	function __search(query, YValFilters=[], FlowFilters=[]) {
 		const ylen = YValFilters.length;
 		const flen = FlowFilters.length;
 		let predicate;
