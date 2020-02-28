@@ -53,6 +53,7 @@ $(async function () {
 		uSelect = val;
 		input.val(val);
 		close();
+		xToggle.removeClass(cHide);
 	});
 	
 	input // open/close on focus/blur, nav on up/down arrow, select on enter, clear on esc, change ul on input.
@@ -61,12 +62,17 @@ $(async function () {
 	.on('input', debounce(function () {
 		i = -1;
 		const v = this.value;
+		const len = v.length;
 		if ( isClosed() ) open();
 		if (v === '') {
+			xToggle.addClass(cHide);
 			search( undefined, ...getFilters(jtree.get_selected()) );
 			scrollTo( $('li:first-child', ul)[0] );
-		} else if (v.length > 1) {
-			search( v, ...getFilters(jtree.get_selected()) );
+		} else if (len > 0) {
+			xToggle.removeClass(cHide);
+			if (len > 1) {
+				search( v, ...getFilters(jtree.get_selected()) );
+			}
 		}
 	}, 100))
 	.on('keydown', function (e) {
@@ -77,20 +83,22 @@ $(async function () {
 			uSelect = focusVal;
 			input.val(focusVal);
 			close();
+			xToggle.removeClass(cHide);
 			return;
 		} else if (key === 27) { // esc
 			uSelect = undefined;
 			input.val('').trigger('input');
 			return;
+		} else if (key === 38 || key === 40) { // 38=up 40=down
+			const lis = $('li', ul);
+			const inc = key === 38 ? -1 : key === 40 ? 1 : 0;
+			i += inc;
+			i = i > lis.length-1 ? 0 : i < 0 ? lis.length-1 : i;
+			focus();
 		}
-		const lis = $('li', ul);
-		const inc = key === 38 ? -1 : key === 40 ? 1 : 0; // 38=up 40=down
-		i += inc;
-		i = i > lis.length-1 ? 0 : i < 0 ? lis.length-1 : i;
-		focus();
 	});
 	
-	// keep input focus if clicks are on x,filter,tree
+	// block input `blur` if clicks are on x,filter,tree (due to `mousedown` firing before `blur`)
 	$('.combo')
 		.on('mousedown', '> span:nth-child(2)', prevent)
 		.on('mousedown', '> svg:nth-child(3)', prevent)
