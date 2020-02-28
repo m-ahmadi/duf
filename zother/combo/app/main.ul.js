@@ -64,7 +64,7 @@ $(async function () {
 		if ( isClosed() ) open();
 		if (v === '') {
 			search( undefined, ...getFilters(jtree.get_selected()) );
-			$('li:first-child', ul)[0].scrollIntoView({block: 'nearest'});
+			scrollTo( $('li:first-child', ul)[0] );
 		} else if (v.length > 1) {
 			search( v, ...getFilters(jtree.get_selected()) );
 		}
@@ -101,7 +101,7 @@ $(async function () {
 	});
 	
 	function focus() {
-		$('li', ul).removeClass(cFocus).eq(i).addClass(cFocus)[0].scrollIntoView({block: 'nearest'});
+		scrollTo(  $('li', ul).removeClass(cFocus).eq(i).addClass(cFocus)[0]  );
 	}
 	function open() {
 		i = -1;
@@ -119,6 +119,9 @@ $(async function () {
 	}
 	function isClosed() {
 		return ul.hasClass(cHide);
+	}
+	function scrollTo(el) {
+		if (el) el.scrollIntoView({block: 'nearest'});
 	}
 	
 	const [, FlowNodes, YValNodes] = jd
