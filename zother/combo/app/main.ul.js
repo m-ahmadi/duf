@@ -110,8 +110,16 @@ $(async function () {
 		if ( !e.target.closest('.combo') ) close();
 	});
 	
+	function select(v) {
+		uSelect = v;
+		input.val(v);
+		close();
+	}
 	function focus() {
 		scrollTo(  $('li', ul).removeClass(cFocus).eq(i).addClass(cFocus)[0]  );
+	}
+	function scrollTo(el) {
+		if (el) el.scrollIntoView({block: 'nearest'});
 	}
 	function open() {
 		i = -1;
@@ -129,14 +137,6 @@ $(async function () {
 	}
 	function isClosed() {
 		return ul.hasClass(cHide);
-	}
-	function scrollTo(el) {
-		if (el) el.scrollIntoView({block: 'nearest'});
-	}
-	function select(v) {
-		uSelect = v;
-		input.val(v);
-		close();
 	}
 	
 	const [, FlowNodes, YValNodes] = jd
