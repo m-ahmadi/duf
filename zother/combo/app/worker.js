@@ -1,19 +1,14 @@
-var log = console.log;
+let data;
+const FlowNames = ['عمومی - مشترک بین بورس و فرابورس', 'بورس', 'فرابورس', 'آتی', 'پایه فرابورس', 'پایه فرابورس - منتشر نمی شود', 'بورس انرژی', 'بورس کالا'];
 
 self.onmessage = function (e) {
 	const d = e.data;
 	if (d.type === 'init') {
-		init(d.rawData);
+		data = d.rawData;
 	} else {
-		const res = search(...d);
-		postMessage(res);
+		postMessage( search(...d) );
 	}
 };
-
-let data;
-function init(_data) {
-	data = _data;
-}
 
 function search(query, YValFilters=[], FlowFilters=[]) {
 	const ylen = YValFilters.length;
@@ -33,8 +28,8 @@ function search(query, YValFilters=[], FlowFilters=[]) {
 			!ylen && !flen ? 'none' : undefined;
 	}
 	const res = predicate === 'none' ? [] : data.filter(predicate);
-	const rgx         = query ? new RegExp(escRgx(query), 'g')        : undefined;
-	const replaceWith = query ? `<span class="query">${query}</span>` : undefined;
+	const rgx = new RegExp(escRgx(query), 'g');
+	const replaceWith = `<span class="query">${query}</span>`;
 	
 	if (query) {
 		res.sort(a => a.Symbol.includes(query) ? -1 : 1);
@@ -43,7 +38,6 @@ function search(query, YValFilters=[], FlowFilters=[]) {
 		res.sort((a,b) => a.Symbol.localeCompare(b.Symbol, 'fa'), );
 	}
 	
-	const FlowNames = [undefined, 'بورس', 'فرابورس', undefined, 'پایه فرابورس'];
 	return res.map(i => `
 		<li data-val="${i.Symbol}">
 			<div>${query ? i.Symbol.replace(rgx, replaceWith) : i.Symbol}</div>

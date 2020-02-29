@@ -1,13 +1,13 @@
 import instruments from './ins.js';
 // import tree from './tree.js';
-import tree from './tree.new.js';
+import treeData from './tree.new.js';
 window.log = console.log;
 
 
 $(async function () {
 	const ins = await instruments();
 	window.ins = ins;
-	const [$jtree, jd] = await tree(ins);
+	const [$jtree, jd] = await treeData(ins);
 	
 	// const data = ins.map(i => [i.Symbol, i.Name]);
 	const data = ins
@@ -31,9 +31,9 @@ $(async function () {
 	const input = $('.combo > input:nth-child(1)');
 	const ul = $('.combo > ul:nth-child(4)');
 	
-	const xToggle = $('.combo span:nth-child(2)');
-	const filterToggle = $('.combo > svg:nth-child(3)');
-	const jtree = $jtree.jstree(true);window.jtree = jtree;
+	const xBtn = $('.combo span:nth-child(2)');
+	const filterBtn = $('.combo > svg:nth-child(3)');
+	const tree = $jtree.jstree(true); // jstree instance
 	let i = -1;
 	let uSelect;
 	
@@ -59,7 +59,7 @@ $(async function () {
 		uSelect = val;
 		input.val(val);
 		close();
-		xToggle.removeClass(cHide);
+		xBtn.removeClass(cHide);
 	});
 	
 	input // open/close on focus/blur, nav on up/down arrow, select on enter, clear on esc, change ul on input.
@@ -71,13 +71,13 @@ $(async function () {
 		const len = v.length;
 		if ( isClosed() ) open();
 		if (v === '') {
-			xToggle.addClass(cHide);
-			search( undefined, ...getFilters(jtree.get_selected()) );
+			xBtn.addClass(cHide);
+			search( undefined, ...getFilters(tree.get_selected()) );
 			scrollTo( $('li:first-child', ul)[0] );
 		} else if (len > 0) {
-			xToggle.removeClass(cHide);
+			xBtn.removeClass(cHide);
 			if (len > 1) {
-				search( v, ...getFilters(jtree.get_selected()) );
+				search( v, ...getFilters(tree.get_selected()) );
 			}
 		}
 	}, 100))
@@ -89,7 +89,7 @@ $(async function () {
 			uSelect = focusVal;
 			input.val(focusVal);
 			close();
-			xToggle.removeClass(cHide);
+			xBtn.removeClass(cHide);
 			return;
 		} else if (key === 27) { // esc
 			uSelect = undefined;
@@ -139,7 +139,7 @@ $(async function () {
 	}
 	
 	const [, FlowNodes, YValNodes] = jd
-		.map(i => ({id: i.id, root: jtree.get_path(i.id, undefined, true)[0]}) )
+		.map(i => ({id: i.id, root: tree.get_path(i.id, undefined, true)[0]}) )
 		.reduce((a,c)=> a[c.root].push(c.id) && a, [null,[],[]]); // 1=Flow 2=YVal
 	function getFilters(selection) {
 		const YValFilters = [], FlowFilters = [];
@@ -176,8 +176,8 @@ $(async function () {
 				!ylen && !flen ? 'none' : undefined;
 		}
 		const res = predicate === 'none' ? [] : data.filter(predicate);
-		const rgx         = query ? new RegExp(escRgx(query), 'g')        : undefined;
-		const replaceWith = query ? `<span class="query">${query}</span>` : undefined;
+		const rgx = new RegExp(escRgx(query), 'g');
+		const replaceWith = `<span class="query">${query}</span>`;
 		
 		if (query) {
 			res.sort(a => a.Symbol.includes(query) ? -1 : 1);
@@ -186,7 +186,7 @@ $(async function () {
 			res.sort((a,b) => a.Symbol.localeCompare(b.Symbol, 'fa'), );
 		}
 		
-		const FlowNames = [undefined, 'بورس', 'فرابورس', undefined, 'پایه فرابورس'];
+		const FlowNames = ['عمومی - مشترک بین بورس و فرابورس', 'بورس', 'فرابورس', 'آتی', 'پایه فرابورس', 'پایه فرابورس - منتشر نمی شود', 'بورس انرژی', 'بورس کالا'];
 		ul.html(res.map(i => `
 			<li data-val="${i.Symbol}">
 				<div>${query ? i.Symbol.replace(rgx, replaceWith) : i.Symbol}</div>
@@ -196,16 +196,16 @@ $(async function () {
 		`).join(''));
 	}
 	
-	filterToggle.on('click', function () {
+	filterBtn.on('click', function () {
 		treeOpened = !treeOpened; // toggling
 		$jtree.toggleClass(cSlideOff);
 	});
 	
 	
-	xToggle.on('click', function () {
+	xBtn.on('click', function () {
 		input.val('').trigger('input');
 	});
-	search( undefined, ...getFilters(jtree.get_selected()) );
+	search( undefined, ...getFilters(tree.get_selected()) );
 });
 
 function prevent(e) {
