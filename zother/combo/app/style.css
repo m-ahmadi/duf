@@ -27,7 +27,6 @@ body {
   overflow-y: scroll;
   border: 1px solid #b0b0b0;
   border-top: none;
-  border-spacing: 0;
   list-style: none;
   padding: 0;
 }
