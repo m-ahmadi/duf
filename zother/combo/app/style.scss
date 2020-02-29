@@ -60,7 +60,6 @@ $border-color: #b0b0b0;
 		top: 6px;
 		left: 5px;
 		cursor: pointer;
-		z-index: 9;
 		
 		fill: white;
 		stroke: black;
@@ -79,7 +78,7 @@ $border-color: #b0b0b0;
 		width: 380px;
 		height: 360px;
 		font-size: 0.9rem;
-		overflow-x: scroll;
+		overflow-y: auto;
 		border: 1px solid #e3e3e3;
 		background: whitesmoke;
 		transition: width 50ms;

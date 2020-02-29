@@ -74,7 +74,6 @@ body {
   top: 6px;
   left: 5px;
   cursor: pointer;
-  z-index: 9;
   fill: white;
   stroke: black;
   stroke-linejoin: round;
@@ -97,7 +96,7 @@ body {
   width: 380px;
   height: 360px;
   font-size: 0.9rem;
-  overflow-x: scroll;
+  overflow-y: auto;
   border: 1px solid #e3e3e3;
   background: whitesmoke;
   transition: width 50ms;
