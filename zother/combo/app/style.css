@@ -14,6 +14,10 @@ body {
   position: absolute;
   width: 100%;
   font-family: "Segoe UI";
+  padding-left: 20px;
+}
+.combo > input:first-child:valid {
+  padding-left: 35px;
 }
 .combo > ul:nth-child(4) {
   position: absolute;
@@ -68,10 +72,14 @@ body {
   position: absolute;
   width: 12px;
   height: 12px;
-  top: 5px;
+  top: 6px;
   left: 5px;
   cursor: pointer;
   z-index: 9;
+  fill: white;
+  stroke: black;
+  stroke-linejoin: round;
+  stroke-width: 5.2px;
 }
 .combo .hide {
   display: none;

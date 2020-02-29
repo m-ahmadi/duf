@@ -14,6 +14,8 @@ $border-color: #b0b0b0;
 		position: absolute;
 		width: 100%;
 		font-family: "Segoe UI";
+		padding-left: 20px;
+		&:valid { padding-left: 35px; } // making room for xBtn
 	}
 	
 	> ul:nth-child(4) {
@@ -56,10 +58,15 @@ $border-color: #b0b0b0;
 		position: absolute;
 		width: 12px;
 		height: 12px;
-		top: 5px;
+		top: 6px;
 		left: 5px;
 		cursor: pointer;
 		z-index: 9;
+		
+		fill: white;
+		stroke: black;
+		stroke-linejoin: round;
+		stroke-width: 5.2px;
 	}
 	
 	.hide  { display: none; }
