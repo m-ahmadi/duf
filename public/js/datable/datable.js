@@ -5,7 +5,7 @@ import tree from './tree/tree.js';
 let $$;
 const dateRgx = /^[0189]{1}\d{1}\/(1[0-2]|[1-9])\/([1-9]|[1-2]\d|3[01])$/;
 
-function init() {
+async function init() {
 	$$ = __els('[data-root="datable"]');
 	
 	// aweso.init();
@@ -13,7 +13,7 @@ function init() {
 	
 	// chosen.init();
 	// chosen.make($$.aweso);
-	tree.init();
+	await tree.init();
 	
 	$$.date.on('input blur change', function () {
 		const v = +this.value;
