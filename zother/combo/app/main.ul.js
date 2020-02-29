@@ -55,7 +55,7 @@ $(async function () {
 		$(this).removeClass(cFocus);
 	})
 	.on('mousedown', 'li', function ({which}) {
-		select(this.dataset.val);
+		select( $(this).data('val') );
 		xBtn.removeClass(cHide);
 	});
 	
