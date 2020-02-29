@@ -32,6 +32,8 @@ $(async function () {
 	const ul = $('.combo > ul:nth-child(4)');
 	
 	const xBtn = $('.combo span:nth-child(2)');
+	xBtn._show = () => xBtn.removeClass(cHide);
+	xBtn._hide = () => xBtn.addClass(cHide);
 	const filterBtn = $('.combo > svg:nth-child(3)');
 	const tree = $jtree.jstree(true); // jstree instance
 	let i = -1;
@@ -56,7 +58,7 @@ $(async function () {
 	})
 	.on('mousedown', 'li', function ({which}) {
 		select( $(this).data('val') );
-		xBtn.removeClass(cHide);
+		xBtn._show();
 	});
 	
 	input // open/close on focus/blur, nav on up/down arrow, select on enter, clear on esc, change ul on input.
@@ -68,11 +70,11 @@ $(async function () {
 		const len = v.length;
 		if ( isClosed() ) open();
 		if (v === '') {
-			xBtn.addClass(cHide);
+			xBtn._hide();
 			search( undefined, ...getFilters(tree.get_selected()) );
 			scrollTo( $('li:first-child', ul)[0] );
 		} else if (len > 0) {
-			xBtn.removeClass(cHide);
+			xBtn._show();
 			if (len > 1) {
 				search( v, ...getFilters(tree.get_selected()) );
 			}
@@ -83,7 +85,7 @@ $(async function () {
 		if (key !== 38 && key !== 40 && key !== 13 && key !== 27) return;
 		if (key === 13) { // enter
 			select( $('li.focus', ul).data('val') );
-			xBtn.removeClass(cHide);
+			xBtn._show();
 			return;
 		} else if (key === 27) { // esc
 			uSelect = undefined;
