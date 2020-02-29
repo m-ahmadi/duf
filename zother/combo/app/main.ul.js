@@ -55,10 +55,7 @@ $(async function () {
 		$(this).removeClass(cFocus);
 	})
 	.on('mousedown', 'li', function ({which}) {
-		const val = this.dataset.val;
-		uSelect = val;
-		input.val(val);
-		close();
+		select(this.dataset.val);
 		xBtn.removeClass(cHide);
 	});
 	
@@ -85,10 +82,7 @@ $(async function () {
 		const key = e.which;
 		if (key !== 38 && key !== 40 && key !== 13 && key !== 27) return;
 		if (key === 13) { // enter
-			const focusVal = $('li.focus', ul).data('val');
-			uSelect = focusVal;
-			input.val(focusVal);
-			close();
+			select( $('li.focus', ul).data('val') );
 			xBtn.removeClass(cHide);
 			return;
 		} else if (key === 27) { // esc
@@ -136,6 +130,11 @@ $(async function () {
 	}
 	function scrollTo(el) {
 		if (el) el.scrollIntoView({block: 'nearest'});
+	}
+	function select(v) {
+		uSelect = v;
+		input.val(v);
+		close();
 	}
 	
 	const [, FlowNodes, YValNodes] = jd
