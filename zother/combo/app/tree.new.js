@@ -1,19 +1,19 @@
-import types from './types.js';
+import raw from './raw.js';
 
 function transformData(ins) {
 	// count YVal occurrences
-	types.forEach(i => i.count = 0);
+	raw.forEach(i => i.count = 0);
 	ins.forEach(i => {
 		let idx;
-		idx = types.findIndex( j => j.id === i.YVal || (j.alias && j.alias.includes(i.YVal)) );
-		if (idx !== -1) types[idx].count += 1;
-		idx = types.findIndex(j => j.id === +i.Flow+100);
-		if (idx !== -1) types[idx].count += 1;
+		idx = raw.findIndex( j => j.id === i.YVal || (j.alias && j.alias.includes(i.YVal)) );
+		if (idx !== -1) raw[idx].count += 1;
+		idx = raw.findIndex(j => j.id === +i.Flow+100);
+		if (idx !== -1) raw[idx].count += 1;
 	});
 	
 	// count categories (by summing up their children count)
-	countCats(types)
-	let dd = types;
+	countCats(raw)
+	let dd = raw;
 	
 	// remove 0 counts:
 	dd = dd.filter(i => i.count !== 0);
@@ -40,8 +40,8 @@ function transformData(ins) {
 	childless.forEach( i => dd.splice(dd.findIndex(j=>j.id===i.id), 1) );
 	dd = dd.concat(childless); */
 	
-	// types.filter((v,i,a) => v.parent === '#' && a.find(j=>j.parent === v.id) ) // categories
-	// types.filter((v,i,a) => !a.find(j=>j.parent === v.id) ) // not category
+	// raw.filter((v,i,a) => v.parent === '#' && a.find(j=>j.parent === v.id) ) // categories
+	// raw.filter((v,i,a) => !a.find(j=>j.parent === v.id) ) // not category
 	return dd;
 }
 function countCats(arr) {
@@ -80,7 +80,7 @@ function finalData(baseData) {
 export default function (ins) {
 	return new Promise((resolve, reject) => {
 		const jd = finalData( transformData(ins) );
-		// const jd = finalData(types);
+		// const jd = finalData(raw);
 		const $el = $('#jtree');
 		$el.jstree({
 			core: {

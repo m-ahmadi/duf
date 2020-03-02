@@ -1,4 +1,4 @@
-var types = [
+var raw = [
 	{ id: 1,   parent: '#', node: 'سهام عادی' },
 	{ id: 300, parent: 1,   node: 'سهام' },
 	{ id: 303, parent: 1,   node: 'آتیسی' },
@@ -100,18 +100,18 @@ function finalData(baseData) {
 
 function transformData(ins) {
 	// count YVal occurrences
-	types.forEach(i => i.count = 0);
+	raw.forEach(i => i.count = 0);
 	ins.forEach(i => {
-		const idx = types.findIndex( j => j.id === i.YVal || (j.alias && j.alias.includes(i.YVal)) );
-		if (idx !== -1) types[idx].count += 1;
+		const idx = raw.findIndex( j => j.id === i.YVal || (j.alias && j.alias.includes(i.YVal)) );
+		if (idx !== -1) raw[idx].count += 1;
 	});
 	
 	let dd;
 	// count of categories:
-	dd = types.map(i => {
+	dd = raw.map(i => {
 		let count = i.count;
 		if (i.parent === '#') {
-			const children = types.filter(j => j.parent === i.id);
+			const children = raw.filter(j => j.parent === i.id);
 			if (children.length) count = children.map(i=>i.count).reduce((a,c)=>a+c);
 		}
 		return Object.assign(i, { count });
@@ -132,7 +132,7 @@ function transformData(ins) {
 	childless.map( i => dd.splice(dd.findIndex(j=>j.id===i.id), 1) );
 	dd = dd.concat(childless);
 	
-	// types.filter((v,i,a) => v.parent === '#' && a.find(j=>j.parent === v.id) ) // categories
-	// types.filter((v,i,a) => !a.find(j=>j.parent === v.id) ) // not category
+	// raw.filter((v,i,a) => v.parent === '#' && a.find(j=>j.parent === v.id) ) // categories
+	// raw.filter((v,i,a) => !a.find(j=>j.parent === v.id) ) // not category
 	return dd;
 }
