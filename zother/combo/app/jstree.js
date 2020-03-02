@@ -77,10 +77,9 @@ function finalData(baseData) {
 	return jd;
 }
 
-export default function (ins) {
+function init(ins) {
 	return new Promise((resolve, reject) => {
 		const jd = finalData( transformData(ins) );
-		// const jd = finalData(raw);
 		const $el = $('#jtree');
 		$el.jstree({
 			core: {
@@ -100,6 +99,8 @@ export default function (ins) {
 		});
 	});
 }
+
+export default { init }
 
 function findPathById(obj, id, path=[]) {
 	let target = obj[id];

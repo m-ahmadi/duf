@@ -61,7 +61,7 @@ var raw = [
 	{ id: 500, parent: '#', node: 'جایزه سهم' }
 ];
 
-export default function (ins) {
+function init(ins) {
 	return new Promise((resolve, reject) => {
 		const jd = finalData( transformData(ins) );
 		const $el = $('#jtree');
@@ -82,6 +82,8 @@ export default function (ins) {
 		});
 	});
 }
+
+export default { init }
 
 function finalData(baseData) {
 	const jd = baseData.map(i => ({
