@@ -77,10 +77,9 @@ function finalData(baseData) {
 	return jd;
 }
 
-function init(ins) {
+function init($el, ins) {
 	return new Promise((resolve, reject) => {
 		const jd = finalData( transformData(ins) );
-		const $el = $('#jtree');
 		$el.jstree({
 			core: {
 				data: jd,
@@ -95,7 +94,7 @@ function init(ins) {
 		})
 		.on('ready.jstree', function () {
 			$el.jstree('close_node', '3')
-			resolve([$el, jd]);
+			resolve(jd);
 		});
 	});
 }

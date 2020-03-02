@@ -3,81 +3,11 @@ body {
 }
 
 .combo {
-  z-index: 999;
   width: 500px;
   position: relative;
 }
 .combo *, .combo *::before, .combo *::after {
   box-sizing: border-box;
-}
-.combo > input:first-child {
-  position: absolute;
-  width: 100%;
-  font-family: "Segoe UI";
-  padding-left: 20px;
-}
-.combo > input:first-child:valid {
-  padding-left: 35px;
-}
-.combo > ul:nth-child(4) {
-  position: absolute;
-  top: 8px;
-  width: 100%;
-  height: 80vh;
-  overflow-y: scroll;
-  border: 1px solid #b0b0b0;
-  border-top: none;
-  list-style: none;
-  padding: 0;
-}
-.combo > ul:nth-child(4) > li {
-  float: right;
-  width: 100%;
-  border-width: 0 0 1px;
-  border-style: solid;
-  border-color: #b0b0b0;
-  font-size: 0.9rem;
-}
-.combo > ul:nth-child(4) > li:last-child {
-  border-bottom: 0;
-}
-.combo > ul:nth-child(4) > li > div {
-  float: right;
-}
-.combo > ul:nth-child(4) > li > div:first-child {
-  width: 35%;
-  padding-right: 5px;
-}
-.combo > ul:nth-child(4) > li > div:nth-child(2) {
-  width: 50%;
-  font-size: 0.8rem;
-  line-height: 1.5rem;
-}
-.combo > ul:nth-child(4) > li > div:last-child {
-  width: 15%;
-  font-size: 0.7rem;
-  line-height: 1.6rem;
-  color: grey;
-}
-.combo > span:nth-child(2) {
-  position: absolute;
-  left: 20px;
-  cursor: default;
-  font-family: initial;
-  user-select: none;
-  cursor: pointer;
-}
-.combo > svg:nth-child(3) {
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  top: 6px;
-  left: 5px;
-  cursor: pointer;
-  fill: white;
-  stroke: black;
-  stroke-linejoin: round;
-  stroke-width: 5.2px;
 }
 .combo .hide {
   display: none;
@@ -89,7 +19,74 @@ body {
   background: #ffffbf;
   line-height: 1.4;
 }
-.combo #jtree {
+.combo > input:first-child {
+  position: absolute;
+  width: 100%;
+  font-family: "Segoe UI";
+  padding-left: 20px;
+}
+.combo > input:first-child:valid {
+  padding-left: 35px;
+}
+.combo > ul:nth-child(2) {
+  position: absolute;
+  top: 8px;
+  width: 100%;
+  height: 80vh;
+  overflow-y: scroll;
+  border: 1px solid #b0b0b0;
+  border-top: none;
+  list-style: none;
+  padding: 0;
+}
+.combo > ul:nth-child(2) > li {
+  float: right;
+  width: 100%;
+  border-width: 0 0 1px;
+  border-style: solid;
+  border-color: #b0b0b0;
+  font-size: 0.9rem;
+}
+.combo > ul:nth-child(2) > li:last-child {
+  border-bottom: 0;
+}
+.combo > ul:nth-child(2) > li > div {
+  float: right;
+}
+.combo > ul:nth-child(2) > li > div:first-child {
+  width: 35%;
+  padding-right: 5px;
+}
+.combo > ul:nth-child(2) > li > div:nth-child(2) {
+  width: 50%;
+  font-size: 0.8rem;
+  line-height: 1.5rem;
+}
+.combo > ul:nth-child(2) > li > div:last-child {
+  width: 15%;
+  font-size: 0.7rem;
+  line-height: 1.6rem;
+  color: grey;
+}
+.combo > span.x-btn {
+  position: absolute;
+  left: 20px;
+  user-select: none;
+  cursor: pointer;
+}
+.combo > svg.filter-btn {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  top: 6px;
+  left: 5px;
+  cursor: pointer;
+  fill: white;
+  stroke: black;
+  stroke-linejoin: round;
+  stroke-width: 5.2px;
+}
+.combo > div.filter-box {
   position: absolute;
   top: 0;
   right: 500px;
@@ -101,18 +98,18 @@ body {
   background: whitesmoke;
   transition: width 50ms;
 }
-.combo #jtree small {
+.combo > div.filter-box small {
   font-size: 0.67rem;
   color: #b3b3b3;
 }
-.combo #jtree.jstree.jstree-default.jstree-rtl .jstree-anchor {
+.combo > div.filter-box.jstree.jstree-default.jstree-rtl .jstree-anchor {
   line-height: 20px;
 }
-.combo #jtree.jstree.jstree-default.jstree-rtl .jstree-anchor > .jstree-themeicon {
+.combo > div.filter-box.jstree.jstree-default.jstree-rtl .jstree-anchor > .jstree-themeicon {
   margin-right: -4px;
   margin-left: -2px;
 }
-.combo #jtree.slide-off {
+.combo > div.filter-box.slide-off {
   width: 0;
   border-left: none;
   border-right: none;

@@ -7,18 +7,23 @@ $border-color: #b0b0b0;
 
 .combo {
 	*, *::before, *::after { box-sizing: border-box; }
-	z-index: 999;
+	
 	width: $input-width;
-	position: relative; 
+	position: relative;
+	
+	.hide  { display: none; }
+	.focus { background: #0080ff; }
+	.query { background: #ffffbf; line-height: 1.4; }
+	
 	> input:first-child {
 		position: absolute;
 		width: 100%;
 		font-family: "Segoe UI";
 		padding-left: 20px;
-		&:valid { padding-left: 35px; } // making room for xBtn
+		&:valid { padding-left: 35px; } // making room for x-btn
 	}
 	
-	> ul:nth-child(4) {
+	> ul:nth-child(2) {
 		position: absolute;
 		top: 8px;
 		width: 100%;
@@ -44,16 +49,14 @@ $border-color: #b0b0b0;
 		}
 	}
 	
-	> span:nth-child(2) {
+	> span.x-btn {
 		position: absolute;
 		left: 20px;
-		cursor: default;
-		font-family: initial; // over uk
 		user-select: none;
 		cursor: pointer;
 	}
 	
-	> svg:nth-child(3) {
+	> svg.filter-btn {
 		position: absolute;
 		width: 12px;
 		height: 12px;
@@ -67,11 +70,7 @@ $border-color: #b0b0b0;
 		stroke-width: 5.2px;
 	}
 	
-	.hide  { display: none; }
-	.focus { background: #0080ff; }
-	.query { background: #ffffbf; line-height: 1.4; }
-	
-	#jtree {
+	> div.filter-box {
 		position: absolute;
 		top: 0;
 		right: $input-width;
