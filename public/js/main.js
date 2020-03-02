@@ -5,6 +5,6 @@ window.log = console.log;
 $(async function () {
 	
 	await tse.init();
-	datable.init();
+	await datable.init();
 	
 });

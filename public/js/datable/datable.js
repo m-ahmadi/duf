@@ -1,6 +1,8 @@
+import tse from '../tse/tse.js';
+
 import aweso from './aweso.js';
 import chosen from './chosen.js';
-import tree from './tree/tree.js';
+import combo from './combo.js';
 
 let $$;
 const dateRgx = /^[0189]{1}\d{1}\/(1[0-2]|[1-9])\/([1-9]|[1-2]\d|3[01])$/;
@@ -13,7 +15,8 @@ async function init() {
 	
 	// chosen.init();
 	// chosen.make($$.aweso);
-	await tree.init();
+	const ins = tse.getInstruments(true, true);
+	await combo.init(ins);
 	
 	$$.date.on('input blur change', function () {
 		const v = +this.value;

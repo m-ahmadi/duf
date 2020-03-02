@@ -1,5 +1,30 @@
 import types from './types.js';
-import tse from '../../tse/tse.js';
+
+function init(ins) {
+	return new Promise((resolve, reject) => {
+		const jd = finalData( transformData(ins) );
+		const $el = $('#jtree');
+		$el.jstree({
+			core: {
+				data: jd,
+				check_callback: true,
+			},
+			plugins: ['checkbox']
+		});
+		
+		$el
+		.on('changed.jstree', function (e, data) {
+			// el.jstree('rename_node', '1', 'new text')
+		})
+		.on('ready.jstree', function () {
+			$el.jstree('close_node', '3')
+			resolve([$el, jd]);
+		});
+	});
+}
+
+export default { init }
+
 
 function transformData(ins) {
 	// count YVal occurrences
@@ -78,34 +103,7 @@ function finalData(baseData) {
 	return jd;
 }
 
-function init () {
-	const ins = tse.getInstruments(true, true);
-	
-	return new Promise((resolve, reject) => {
-		const jd = finalData( transformData(ins) );
-		// const jd = finalData(types);
-		const $el = $('#jtree');
-		$el.jstree({
-			core: {
-				data: jd,
-				check_callback: true,
-			},
-			plugins: ['checkbox']
-		});
-		
-		$el
-		.on('changed.jstree', function (e, data) {
-			// el.jstree('rename_node', '1', 'new text')
-		})
-		.on('ready.jstree', function () {
-			$el.jstree('close_node', '3')
-			resolve([$el, jd]);
-		});
-	});
-}
-
-export default {init}
-
+// just in case
 function findPathById(obj, id, path=[]) {
 	let target = obj[id];
 	path.push(target.text);
