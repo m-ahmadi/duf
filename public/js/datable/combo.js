@@ -6,18 +6,16 @@ async function init(instruments) {
 	const root = $('.combo');
 	root.html(`
 		<input type="text" required />
-		<span>✖</span>
-		<svg viewBox="0 0 102 102"><path d="M3,3 H99 L62,58 V89 L40,99 V58 L3,3 Z" /></svg>
 		<ul class="hide"></ul>
-		<div id="jtree" class="slide-off"></div>
+		<span class="x-btn hide">✖</span>
+		<svg class="filter-btn" viewBox="0 0 102 102"><path d="M3,3 H99 L62,58 V89 L40,99 V58 L3,3 Z" /></svg>
+		<div class="filter-box slide-off"></div>
 	`);
-	
-	const [$jtree, jd] = await jstree.init(instruments);
 	
 	const data = instruments
 		.map(i => ({
-			Symbol: cleanFa(i.Symbol), // i.Symbol
-			Name: cleanFa(i.Name),     // i.Name
+			Symbol: cleanFa(i.Symbol),
+			Name: cleanFa(i.Name),
 			YVal: ''+i.YVal,
 			Flow: ''+i.Flow
 		}))
@@ -29,27 +27,20 @@ async function init(instruments) {
 	};
 	worker.postMessage({type:'init', rawData: data});
 	
-	const cFocus = 'focus';
-	const cHide = 'hide';
-	const cSlideOff = 'slide-off';
+	const input      = $('> input:first-child', root);
+	const ul         = $('> ul:nth-child(2)', root);
+	const xBtn       = $('> span.x-btn', root);
+	const filterBtn  = $('> svg.filter-btn', root);
+	const $filterBox = $('> div.filter-box', root);
+	const [cFocus, cHide, cSlideOff] = ['focus', 'hide', 'slide-off'];
+	let i = -1, uSelect, filterBoxOpened;
 	
-	
-	
-	const input = $('> input:nth-child(1)', root);
-	const ul = $('> ul:nth-child(4)', root);
-	
-	const xBtn = $('span:nth-child(2)', root);
-	const filterBtn = $('svg:nth-child(3)', root);
-	const tree = $jtree.jstree(true); // jstree instance
-	let i = -1;
-	let uSelect;
-	
-	let treeOpened;
-	
+	const treeData = await jstree.init($filterBox, instruments);
+	const tree = $filterBox.jstree(true); // jstree instance
 	xBtn._show = () => xBtn.removeClass(cHide);
 	xBtn._hide = () => xBtn.addClass(cHide);
 	
-	$jtree.on('changed.jstree', function (e, _data) {
+	$filterBox.on('changed.jstree', function (e, _data) {
 		// el.jstree('rename_node', '1', 'new text')
 		const { selected, node } = _data;
 		open();
@@ -110,9 +101,9 @@ async function init(instruments) {
 	
 	// block input `blur` if clicks are on x,filter,tree (due to `mousedown` firing before `blur`)
 	$('.combo')
-		.on('mousedown', '> span:nth-child(2)', prevent)
-		.on('mousedown', '> svg:nth-child(3)', prevent)
-		.on('mousedown', '> #jtree', prevent);
+		.on('mousedown', '> span.x-btn', prevent)
+		.on('mousedown', '> svg.filter-btn', prevent)
+		.on('mousedown', '> div.filter-box', prevent);
 	
 	$('body').on('click', function (e) {
 		if ( !e.target.closest('.combo') ) close();
@@ -137,17 +128,17 @@ async function init(instruments) {
 			i = $(`li[data-val="${uSelect}"]`, ul).index();
 			focus();
 		}
-		if (treeOpened) $jtree.removeClass(cSlideOff)
+		if (filterBoxOpened) $filterBox.removeClass(cSlideOff)
 	}
 	function close(e) {
 		if ( !isClosed() ) ul.addClass(cHide);
-		$jtree.addClass(cSlideOff);
+		$filterBox.addClass(cSlideOff);
 	}
 	function isClosed() {
 		return ul.hasClass(cHide);
 	}
 	
-	const [, FlowNodes, YValNodes] = jd
+	const [, FlowNodes, YValNodes] = treeData
 		.map(i => ({id: i.id, root: tree.get_path(i.id, undefined, true)[0]}) )
 		.reduce((a,c)=> a[c.root].push(c.id) && a, [null,[],[]]); // 1=Flow 2=YVal
 	function getFilters(selection) {
@@ -206,8 +197,8 @@ async function init(instruments) {
 	}
 	
 	filterBtn.on('click', function () {
-		treeOpened = !treeOpened; // toggling
-		$jtree.toggleClass(cSlideOff);
+		filterBoxOpened = !filterBoxOpened; // toggling
+		$filterBox.toggleClass(cSlideOff);
 	});
 	
 	
