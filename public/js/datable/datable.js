@@ -1,7 +1,4 @@
 import tse from '../tse/tse.js';
-
-import aweso from './aweso.js';
-import chosen from './chosen.js';
 import combo from './combo.js';
 
 let $$;
@@ -10,11 +7,6 @@ const dateRgx = /^[0189]{1}\d{1}\/(1[0-2]|[1-9])\/([1-9]|[1-2]\d|3[01])$/;
 async function init() {
 	$$ = __els('[data-root="datable"]');
 	
-	// aweso.init();
-	// aweso.make($$.aweso);
-	
-	// chosen.init();
-	// chosen.make($$.aweso);
 	const ins = tse.getInstruments(true, true);
 	await combo.init(ins);
 	
