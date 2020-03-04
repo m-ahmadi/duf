@@ -5,7 +5,7 @@ export default { init }
 async function init(instruments) {
 	const root = $('.combo');
 	root.html(`
-		<input type="text" required />
+		<input type="text" required class="uk-input" />
 		<ul class="hide"></ul>
 		<span class="x-btn hide">✖</span>
 		<svg class="filter-btn" viewBox="0 0 102 102"><path d="M3,3 H99 L62,58 V89 L40,99 V58 L3,3 Z" /></svg>

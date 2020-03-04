@@ -1,4 +1,4 @@
-$input-width: 400px;
+$input-width: 420px;
 $border-color: #b0b0b0;
 
 .combo {
@@ -7,7 +7,7 @@ $border-color: #b0b0b0;
 	position: relative;
 	
 	.hide  { display: none; }
-	.focus { background: #0080ff; }
+	.focus { background: #1E90FF; }
 	.query { background: #ffffbf; line-height: 1.4; }
 	
 	> input:first-child {
@@ -20,11 +20,16 @@ $border-color: #b0b0b0;
 			/*rtl:ignore*/
 			padding-left: 35px; // making room for x-btn
 		}
+		&.uk-input {
+			height: initial;
+			/*rtl:ignore*/
+			padding-right: 5px;
+		}
 	}
 	
 	> ul:nth-child(2) {
 		position: absolute;
-		top: 3px;
+		top: 6px;
 		width: 100%;
 		height: 80vh;
 		overflow-y: scroll;
@@ -42,6 +47,7 @@ $border-color: #b0b0b0;
 			border-style: solid;
 			border-color: $border-color;
 			font-size: 0.9rem;
+			color: #444;
 			&:last-child { border-bottom: 0; }
 			> div {
 				/*rtl:ignore*/
@@ -52,8 +58,8 @@ $border-color: #b0b0b0;
 				/*rtl:ignore*/
 				padding-right: 5px;
 			}
-			> div:nth-child(2) { width: 50%; font-size: 0.8rem; line-height: 1.5rem;  }
-			> div:last-child { width: 15%; font-size: 0.7rem; line-height: 1.6rem; color: grey; }
+			> div:nth-child(2) { width: 49%; font-size: 0.8rem; line-height: 1.5rem;  }
+			> div:last-child { width: 16%; font-size: 0.7rem; line-height: 1.6rem; color: grey; }
 		}
 	}
 	
@@ -94,6 +100,7 @@ $border-color: #b0b0b0;
 		border: 1px solid #e3e3e3;
 		background: whitesmoke;
 		transition: width 50ms;
+		z-index: 1;
 		small {
 			font-size: 0.67rem;
 			color: #b3b3b3;
