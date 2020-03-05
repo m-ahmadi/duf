@@ -1,10 +1,21 @@
-$input-width: 420px;
+$width: 150px;
+$width-large: 420px;
 $border-color: #b0b0b0;
 
 .combo {
 	*, *::before, *::after { box-sizing: border-box; }
-	width: $input-width;
+	width: $width;
 	position: relative;
+	
+	&:focus-within {
+		width: $width-large;
+		div.filter-box {
+			/*rtl:ignore*/
+			right: $width-large;
+		}
+		span.x-btn { visibility: visible; }
+		svg.filter-btn { visibility: visible; }
+	}
 	
 	.hide  { display: none; }
 	.focus { background: #1E90FF; }
@@ -70,6 +81,7 @@ $border-color: #b0b0b0;
 		font-family: initial; // over uk
 		user-select: none;
 		cursor: pointer;
+		visibility: hidden;
 	}
 	
 	> svg.filter-btn {
@@ -80,6 +92,7 @@ $border-color: #b0b0b0;
 		/*rtl:ignore*/
 		left: 5px; 
 		cursor: pointer;
+		visibility: hidden;
 		
 		fill: white;
 		stroke: black;
@@ -91,7 +104,7 @@ $border-color: #b0b0b0;
 		position: absolute;
 		top: 0;
 		/*rtl:ignore*/
-		right: $input-width;
+		right: $width;
 		width: 380px;
 		height: 360px;
 		font-size: 0.9rem;
