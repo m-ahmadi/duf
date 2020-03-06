@@ -10,26 +10,30 @@ body {
 }
 
 #datable {
+	input {
+		@extend .uk-input, .uk-form-small;
+		padding: 0 !important;
+		height: 22px !important;
+	}
+	select {
+		@extend .uk-select, .uk-form-small;
+	}
+	
+	td:first-child { width: 420px; }
+	
 	.buyrange {
 		position: relative;
 		width: 65px;
 		> input {
-			height: 25px;
 			position: absolute;
 			right: 0;
-			&:first-child {
-				top: 0;
-			}
-			&:last-child {
-				top: 26px;
-			}
+			&:first-child { top: 0; }
+			&:last-child { top: 26px; }
 		}
 	}
 	
 	.date > input {
 		width: 35px;
-		height: 22px !important;
-		padding: 0 !important;
 	}
 
 	.w8time > * {
