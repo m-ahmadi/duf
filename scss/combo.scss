@@ -9,10 +9,7 @@ $border-color: #b0b0b0;
 	
 	&:focus-within {
 		width: $width-large;
-		div.filter-box {
-			/*rtl:ignore*/
-			right: $width-large;
-		}
+		div.filter-box { left: $width-large; }
 		span.x-btn { visibility: visible; }
 		svg.filter-btn { visibility: visible; }
 	}
@@ -25,16 +22,12 @@ $border-color: #b0b0b0;
 		position: absolute;
 		width: 100%;
 		font-family: "Segoe UI";
-		/*rtl:ignore*/
-		padding-left: 20px; 
-		&:valid {
-			/*rtl:ignore*/
-			padding-left: 35px; // making room for x-btn
-		}
+		
+		padding-right: 20px; 
+		&:valid { padding-right: 35px; } // making room for x-btn
 		&.uk-input {
 			height: initial;
-			/*rtl:ignore*/
-			padding-right: 5px;
+			padding-left: 5px;
 		}
 	}
 	
@@ -51,8 +44,7 @@ $border-color: #b0b0b0;
 		background: white;
 		
 		> li {
-			/*rtl:ignore*/
-			float: right; 
+			float: left; 
 			width: 100%;
 			border-width: 0 0 1px;
 			border-style: solid;
@@ -60,14 +52,10 @@ $border-color: #b0b0b0;
 			font-size: 0.9rem;
 			color: #444;
 			&:last-child { border-bottom: 0; }
-			> div {
-				/*rtl:ignore*/
-				float: right;
-			}
+			> div { float: left; }
 			> div:first-child {
 				width: 35%;
-				/*rtl:ignore*/
-				padding-right: 5px;
+				padding-left: 5px;
 			}
 			> div:nth-child(2) { width: 49%; font-size: 0.8rem; line-height: 1.5rem;  }
 			> div:last-child { width: 16%; font-size: 0.7rem; line-height: 1.6rem; color: grey; }
@@ -76,8 +64,7 @@ $border-color: #b0b0b0;
 	
 	> span.x-btn {
 		position: absolute;
-		/*rtl:ignore*/
-		left: 20px; 
+		right: 20px; 
 		font-family: initial; // over uk
 		user-select: none;
 		cursor: pointer;
@@ -89,8 +76,7 @@ $border-color: #b0b0b0;
 		width: 12px;
 		height: 12px;
 		top: 6px;
-		/*rtl:ignore*/
-		left: 5px; 
+		right: 5px; 
 		cursor: pointer;
 		visibility: hidden;
 		
@@ -103,8 +89,7 @@ $border-color: #b0b0b0;
 	> div.filter-box {
 		position: absolute;
 		top: 0;
-		/*rtl:ignore*/
-		right: $width;
+		left: $width;
 		width: 380px;
 		height: 360px;
 		font-size: 0.9rem;
