@@ -14,7 +14,7 @@ class Instrument {
 		this.Name         = row[6];
 		this.CIsin        = row[7];
 		this.DEven        = row[8];  // int32 (int)
-		this.Flow         = row[9];  // byte بازار
+		this.Flow         = parseInt(row[9], 10);  // byte بازار
 		this.LSoc30       = row[10]; // نام 30 رقمي فارسي شرکت
 		this.CGdSVal      = row[11]; // A,I,O نوع نماد
 		this.CGrValCot    = row[12]; // 00,11,1A,...25 کد گروه نماد
@@ -22,7 +22,7 @@ class Instrument {
 		this.CComVal      = row[14]; // 1,3,4,5,6,7,8,9 کد تابلو
 		this.CSecVal      = row[15]; // []62 کد گروه صنعت
 		this.CSoSecVal    = row[16]; // []177 کد زير گروه صنعت
-		this.YVal         = parseInt(row[17], 10);
+		this.YVal         = row[17];
 	}
 }
 

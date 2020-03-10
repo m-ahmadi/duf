@@ -10,22 +10,31 @@ self.onmessage = function (e) {
 	}
 };
 
-function search(query, YValFilters=[], FlowFilters=[]) {
+function search(query, YValFilters=[], FlowFilters=[], CSecValFilters=[]) {
 	const ylen = YValFilters.length;
 	const flen = FlowFilters.length;
+	const clen = CSecValFilters.length;
 	let predicate;
 	if (query) {
 		predicate = 
-			ylen  && flen  ? i => `${i.Symbol} ${i.Name}`.includes(query) && YValFilters.includes(i.YVal) && FlowFilters.includes(i.Flow) :
-			ylen  && !flen ? i => `${i.Symbol} ${i.Name}`.includes(query) && YValFilters.includes(i.YVal) :
-			!ylen && flen  ? i => `${i.Symbol} ${i.Name}`.includes(query) && FlowFilters.includes(i.Flow) :
-			!ylen && !flen ? i => `${i.Symbol} ${i.Name}`.includes(query) : undefined;
+			ylen   && flen  && clen  ? i => `${i.Symbol} ${i.Name}`.includes(query) && YValFilters.includes(i.YVal) && FlowFilters.includes(i.Flow) && CSecValFilters.includes(i.CSecVal) :
+			ylen   && flen  && !clen ? i => `${i.Symbol} ${i.Name}`.includes(query) && YValFilters.includes(i.YVal) && FlowFilters.includes(i.Flow) :
+			ylen   && !flen && clen  ? i => `${i.Symbol} ${i.Name}`.includes(query) && YValFilters.includes(i.YVal) && CSecValFilters.includes(i.CSecVal) :
+			!ylen  && flen  && clen  ? i => `${i.Symbol} ${i.Name}`.includes(query) && FlowFilters.includes(i.Flow) && CSecValFilters.includes(i.CSecVal) :
+			ylen   && !flen && !clen ? i => `${i.Symbol} ${i.Name}`.includes(query) && YValFilters.includes(i.YVal) :
+			!ylen  && flen  && !clen ? i => `${i.Symbol} ${i.Name}`.includes(query) && FlowFilters.includes(i.Flow) :
+			!ylen  && !flen && clen  ? i => `${i.Symbol} ${i.Name}`.includes(query) && CSecValFilters.includes(i.CSecVal)  :
+			!ylen  && !flen && !clen ? i => `${i.Symbol} ${i.Name}`.includes(query) : undefined;
 	} else {
 		predicate = 
-			ylen  && flen  ? i => YValFilters.includes(i.YVal) && FlowFilters.includes(i.Flow) :
-			ylen  && !flen ? i => YValFilters.includes(i.YVal) :
-			!ylen && flen  ? i => FlowFilters.includes(i.Flow) :
-			!ylen && !flen ? 'none' : undefined;
+			ylen   && flen  && clen  ? i => YValFilters.includes(i.YVal) && FlowFilters.includes(i.Flow) && CSecValFilters.includes(i.CSecVal) :
+			ylen   && flen  && !clen ? i => YValFilters.includes(i.YVal) && FlowFilters.includes(i.Flow) :
+			ylen   && !flen && clen  ? i => YValFilters.includes(i.YVal) && CSecValFilters.includes(i.CSecVal) :
+			!ylen  && flen  && clen  ? i => FlowFilters.includes(i.Flow) && CSecValFilters.includes(i.CSecVal) :
+			ylen   && !flen && !clen ? i => YValFilters.includes(i.YVal) :
+			!ylen  && flen  && !clen ? i => FlowFilters.includes(i.Flow) :
+			!ylen  && !flen && clen  ? i => CSecValFilters.includes(i.CSecVal)  :
+			!ylen  && !flen && !clen ? 'none' : undefined;
 	}
 	const res = predicate === 'none' ? [] : data.filter(predicate);
 	const rgx = new RegExp(escRgx(query), 'g');

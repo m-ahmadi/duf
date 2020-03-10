@@ -1,13 +1,20 @@
 import raw from './raw.js';
 
 function transformData(ins) {
-	// count YVal occurrences
+	// count YVal,Flow,CSecVal occurrences
 	raw.forEach(i => i.count = 0);
 	ins.forEach(i => {
 		let idx;
-		idx = raw.findIndex( j => j.id === i.YVal || (j.alias && j.alias.includes(i.YVal)) );
+		idx = raw.findIndex( j => j.id === +i.YVal || (j.alias && j.alias.includes(+i.YVal)) );
 		if (idx !== -1) raw[idx].count += 1;
-		idx = raw.findIndex(j => j.id === +i.Flow+100);
+		
+		idx = raw.findIndex(j => j.id === i.Flow+100);
+		if (idx !== -1) raw[idx].count += 1;
+		
+		idx = raw.findIndex(j => ['01','02','XD'].includes(j.id)
+			? j.id === i.CSecVal.trim()
+			: j.id === +i.CSecVal+1000
+		);
 		if (idx !== -1) raw[idx].count += 1;
 	});
 	
@@ -51,14 +58,14 @@ function countCats(arr) {
 	const count = cat => {
 		cat.forEach(i =>
 			i.count = arr
-				.filter(j=>j.parent===i.id) // get children of of this node
+				.filter(j=>j.parent===i.id) // get children of this node
 				.map(i=>i.count)            // sum the children counts...
 				.reduce((a,c)=>a+c)
 				// .reduce((a,c)=>({count:a.count+c.count})).count;
 		);
 	};
-	count(nonRoots, arr); // must be counted first
-	count(roots, arr);
+	count(nonRoots); // must be counted first
+	count(roots);
 }
 
 function finalData(baseData) {
