@@ -9,7 +9,6 @@ html/script-app/*
 !html/script-app/root.htm
 public/lib/_templates.js
 public/lib/_partials.js
-public/js/#.js
 public/css/*
 public/index.html
 public/data/*
