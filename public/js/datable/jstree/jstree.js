@@ -16,7 +16,7 @@ function init($el, ins) {
 			// el.jstree('rename_node', '1', 'new text')
 		})
 		.on('ready.jstree', function () {
-			$el.jstree('close_node', '3')
+			$el.jstree('close_node', 'b1')
 			resolve(jd);
 		});
 	});
@@ -99,7 +99,7 @@ function finalData(baseData) {
 		text: `${i.node} <small>(${i.count})</small>`,
 		parent: ''+i.parent,
 		// state: {opened: true},
-		...i.id === 3 && {state: { selected: true }}, // tmp, preselect one category
+		...i.id === 'b1' && {state: { selected: true }}, // tmp, preselect one category
 		...!baseData.filter(j=>j.parent===i.id).length && {icon: 'hide'} // hide jstree-file
 	}));
 	// change icon of child-less root-nodes:
