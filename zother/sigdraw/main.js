@@ -1,10 +1,22 @@
 const log = console.log;
 class Path {
 	constructor(points, attrs) {
-		const [x,y] = points[0];
+		const {x,y} = points[0];
 		return createEl('path', {
-			d: `M${x},${y}` + points.slice(1).map(([x,y])=>`L${x},${y}`).join(' '),
+			d: `M${x},${y}` + points.slice(1).map(({x,y})=>`L${x},${y}`).join(' '),
 			stroke: 'black',
+			...attrs
+		});
+	}
+}
+
+class Circle {
+	constructor(cx, cy, attrs) {
+		return createEl('circle', {
+			cx,
+			cy,
+			r: 1,
+			fill: 'red',
 			...attrs
 		});
 	}
@@ -31,11 +43,21 @@ $(async function () {
 	prices = scale(prices, 0, height);
 	
 	step = 0;
-	points = prices.map(i => [step+=1, i]);
+	points = prices.map(i => ({x: step+=1, y: i}));
 	
-	svg.append( new Path(points, {fill:'none','stroke-width':2}) );
+	path = new Path(points, {fill:'none','stroke-width':2});
+	svg.append(path);
+	
+	path.addEventListener('click', function (e) {
+		const point = svg[0].createSVGPoint();
+		point.x = e.x;
+		point.y = e.y;
+		console.log( point );
+		console.log( points.find(({x,y})=> x===e.x && y===e.y) );
+	});
+	
+	points.forEach( ({x,y}) => svg.append(new Circle(x,y)) );
 });
-
 
 function createEl(tag, attrs) {
 	const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
