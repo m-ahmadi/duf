@@ -1,26 +1,4 @@
 const log = console.log;
-class Path {
-	constructor(points, attrs) {
-		const {x,y} = points[0];
-		return createEl('path', {
-			d: `M${x},${y}` + points.slice(1).map(({x,y})=>`L${x},${y}`).join(' '),
-			stroke: 'black',
-			...attrs
-		});
-	}
-}
-
-class Circle {
-	constructor(cx, cy, attrs) {
-		return createEl('circle', {
-			cx,
-			cy,
-			r: 1,
-			fill: 'red',
-			...attrs
-		});
-	}
-}
 
 const signals = [
 	{symbol: '', enter: [], targets: [], supps: [], time: 30},
@@ -30,53 +8,81 @@ $(async function () {
 	bars = (await tse.getPrices(['فولاد']))[0];
 	closes = bars.map(i => i.close/10);
 	
-	svg = $('svg');
-	width = svg.width();
-	height = svg.height();
+	canvas = document.querySelector('canvas');
+	c = canvas.getContext('2d');
+	offset = 35;
+	c.canvas.width = 800;
+	c.canvas.height = 400;
+	c.canvas.width += offset;
+	c.canvas.height += offset;
+	width = c.canvas.width - offset;
+	height = c.canvas.height - offset;
 	
+	prices = closes.slice(-500);
+	pricesPx = map2px(prices);
+	pricesPxScaled = scale(pricesPx, 0, height);
+	step = 0+offset;
+	points = pricesPxScaled.map(i => ({x: step+=1, y: i}));
 	
-	//$( createEl('path', {d:'M 10,20 l600,50', stroke:'orange'}) ).appendTo(svg);
-	//svg.append( new Path([[500,50],[10,400]]) );
-	prices = closes.slice(-700);
+	var path = new Path2D();
 	
-	prices = map2px(prices);
-	prices = scale(prices, 0, height);
+	// graph
+	path.moveTo(points[0].x, points[0].y);
+	points.slice(1).forEach(({x,y}) =>
+		path.lineTo(x, y)
+	);
+	c.lineWidth = 1;
+	c.strokeStyle = 'blue';
+	c.stroke(path);
 	
-	step = 0;
-	points = prices.map(i => ({x: step+=1, y: i}));
+	min = Math.min(...prices);
+	max = Math.max(...prices);
 	
-	path = new Path(points, {fill:'none','stroke-width':2});
-	svg.append(path);
+	// separator lines
+	c.lineWidth = 0.5;
+	c.strokeStyle = 'black';
+	c.moveTo(offset, height);
+	c.lineTo(width+offset, height);
+	c.moveTo(offset, 0);
+	c.lineTo(offset, height);
+	c.stroke();
 	
-	path.addEventListener('click', function (e) {
-		const point = svg[0].createSVGPoint();
-		point.x = e.x;
-		point.y = e.y;
-		console.log( point );
-		console.log( points.find(({x,y})=> x===e.x && y===e.y) );
+	// horizontal lines and labels
+	c.beginPath();
+	c.lineWidth = 1;
+	c.strokeStyle = 'deeppink';
+	c.setLineDash([1]);
+	max2nd = max%100 ? max-(max%100) : max;
+	min2nd = min%100 ? min+(100-min%100) : min;
+	step = min2nd;
+	yAxLines = [min, min2nd].concat([...Array( Math.floor((max2nd-min2nd)/100) )].map(()=>step+=100), max);
+	log(yAxLines);
+	yAxLinesScaled = scale(yAxLines, 0, height);
+	yAxLinesScaled.reverse().slice(1).slice(0,-1).forEach((v,i) => {
+		c.moveTo(offset, v);
+		c.lineTo(width+offset, v);
+		c.fillText(yAxLines[i+1], 5,v+3);
 	});
+	c.fillText(yAxLines[yAxLines.length-1],5,9);
+	c.fillText(yAxLines[0],5,height-1);
+	c.stroke();
 	
-	points.forEach( ({x,y}) => svg.append(new Circle(x,y)) );
-});
-
-function createEl(tag, attrs) {
-	const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-	Object.keys(attrs).forEach(k => el.setAttribute(k, attrs[k]) );
-	return el;
-}
-
-/*
-svg[0].addEventListener('wheel', function (e) {
-	const { deltaY } = e;
-	if (deltaY < 0) {
-		// up
-		svg[0].setAttribute('viewBox', `0 0 ${width-=10} ${height-=10}`)
-	} else if (deltaY > 0) { 
-		// down
-		svg[0].setAttribute('viewBox', `0 0 ${width+=10} ${height+=10}`)
+	// vertical lines and labels
+	c.beginPath();
+	c.lineWidth = 1;
+	c.strokeStyle = 'cyan';
+	c.setLineDash([1]);
+	for (let i=0; i<width; i+=30) {
+		c.moveTo(i+offset, 0);
+		c.lineTo(i+offset, height);
 	}
+	c.stroke();
+	
+	canvas.addEventListener('click', function (e) {
+		// log(e.x, e.y);
+		// log( c.isPointInPath(path, e.x, e.y) );
+	});
 });
-*/
 
 function map2px(nums) {
 	const min = Math.min(...nums);
