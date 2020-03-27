@@ -10,18 +10,18 @@ $(async function () {
 	
 	canvas = document.querySelector('canvas');
 	c = canvas.getContext('2d');
-	offset = 35;
+	pad = 35;
 	c.canvas.width = 800;
 	c.canvas.height = 400;
-	c.canvas.width += offset;
-	c.canvas.height += offset;
-	width = c.canvas.width - offset;
-	height = c.canvas.height - offset;
+	c.canvas.width += pad;
+	c.canvas.height += pad;
+	width = c.canvas.width - pad;
+	height = c.canvas.height - pad;
 	
 	prices = closes.slice(-500);
 	pricesPx = map2px(prices);
 	pricesPxScaled = scale(pricesPx, 0, height);
-	step = 0+offset;
+	step = 0+pad;
 	points = pricesPxScaled.map(i => ({x: step+=1, y: i}));
 	
 	var path = new Path2D();
@@ -41,10 +41,10 @@ $(async function () {
 	// separator lines
 	c.lineWidth = 0.5;
 	c.strokeStyle = 'black';
-	c.moveTo(offset, height);
-	c.lineTo(width+offset, height);
-	c.moveTo(offset, 0);
-	c.lineTo(offset, height);
+	c.moveTo(pad, height);
+	c.lineTo(width+pad, height);
+	c.moveTo(pad, 0);
+	c.lineTo(pad, height);
 	c.stroke();
 	
 	// horizontal lines and labels
@@ -56,11 +56,11 @@ $(async function () {
 	min2nd = min%100 ? min+(100-min%100) : min;
 	step = min2nd;
 	yAxLines = [min, min2nd].concat([...Array( Math.floor((max2nd-min2nd)/100) )].map(()=>step+=100), max);
-	log(yAxLines);
+	
 	yAxLinesScaled = scale(yAxLines, 0, height);
 	yAxLinesScaled.reverse().slice(1).slice(0,-1).forEach((v,i) => {
-		c.moveTo(offset, v);
-		c.lineTo(width+offset, v);
+		c.moveTo(pad, v);
+		c.lineTo(width+pad, v);
 		c.fillText(yAxLines[i+1], 5,v+3);
 	});
 	c.fillText(yAxLines[yAxLines.length-1],5,9);
@@ -73,8 +73,8 @@ $(async function () {
 	c.strokeStyle = 'cyan';
 	c.setLineDash([1]);
 	for (let i=0; i<width; i+=30) {
-		c.moveTo(i+offset, 0);
-		c.lineTo(i+offset, height);
+		c.moveTo(i+pad, 0);
+		c.lineTo(i+pad, height);
 	}
 	c.stroke();
 	
