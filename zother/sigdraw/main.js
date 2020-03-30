@@ -5,8 +5,8 @@ const signals = [
 ];
 
 $(async function () {
-	bars = (await tse.getPrices(['فولاد']))[0];
-	closes = bars.map(i => i.close/10);
+	bars = (await tse.getPrices(['فولاد'],{adjustPrices:1}))[0];
+	closes = bars.map(i => +Big(i.close).div(10).round(2,2));
 	
 	canvas = document.querySelector('canvas');
 	c = canvas.getContext('2d');
