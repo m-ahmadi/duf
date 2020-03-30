@@ -7,18 +7,18 @@ const signals = [
 $(async function () {
 	bars = (await tse.getPrices(['فولاد'],{adjustPrices:1}))[0];
 	closes = bars.map(i => +Big(i.close).div(10).round(2,2));
+	prices = closes.slice(-800);
 	
 	canvas = document.querySelector('canvas');
 	c = canvas.getContext('2d');
 	pad = 35;
-	c.canvas.width = 800;
-	c.canvas.height = 400;
-	c.canvas.width += pad;
-	c.canvas.height += pad;
+	canvas.width = prices.length;
+	canvas.height = 400;
+	canvas.width += pad;
+	canvas.height += pad;
 	width = c.canvas.width - pad;
 	height = c.canvas.height - pad;
 	
-	prices = closes.slice(-500);
 	pricesPx = map2px(prices);
 	pricesPxScaled = scale(pricesPx, 0, height);
 	step = 0+pad;
