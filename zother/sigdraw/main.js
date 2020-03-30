@@ -56,9 +56,8 @@ $(async function () {
 	min2nd = min%100 ? min+(100-min%100) : min;
 	step = min2nd;
 	yAxLines = [min, min2nd].concat([...Array( Math.floor((max2nd-min2nd)/100) )].map(()=>step+=100), max);
-	
-	yAxLinesScaled = scale(yAxLines, 0, height);
-	yAxLinesScaled.reverse().slice(1).slice(0,-1).forEach((v,i) => {
+	yAxLinesScaled = scale(map2px(yAxLines), 0, height);
+	yAxLinesScaled.slice(1).slice(0,-1).forEach((v,i) => {
 		c.moveTo(pad, v);
 		c.lineTo(width+pad, v);
 		c.fillText(yAxLines[i+1], 5,v+3);
