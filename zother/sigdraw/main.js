@@ -78,9 +78,11 @@ $(async function () {
 	}
 	c.stroke();
 	
-	canvas.addEventListener('click', function (e) {
-		// log(e.x, e.y);
-		// log( c.isPointInPath(path, e.x, e.y) );
+	canvas.addEventListener('mousemove', function (e) {
+		// const x = e.offsetX - pad; //e.pageX - canvas.offsetLeft;
+		// const y = e.offsetY; //e.pageY - canvas.offsetTop;
+		// log(x, y);
+		// log( c.isPointInPath(path, x, y) );
 	});
 });
 
