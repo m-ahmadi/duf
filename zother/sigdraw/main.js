@@ -60,10 +60,10 @@ $(async function () {
 	yAxLinesScaled.slice(1).slice(0,-1).forEach((v,i) => {
 		c.moveTo(pad, v);
 		c.lineTo(width+pad, v);
-		c.fillText(yAxLines[i+1], 5,v+3);
+		c.fillText(yAxLines[i+1], 15,v+4);
 	});
-	c.fillText(yAxLines[yAxLines.length-1],5,9);
-	c.fillText(yAxLines[0],5,height-1);
+	c.fillText(yAxLines[yAxLines.length-1],5,10);
+	c.fillText(yAxLines[0],5,height);
 	c.stroke();
 	
 	// vertical lines and labels
