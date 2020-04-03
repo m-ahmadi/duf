@@ -245,7 +245,7 @@ function getCell(columnName, instrument, closingPrice, adjustPrices) {
 }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 const startDeven = '20010321';
-const UPDATE_INTERVAL = 1;
+const UPDATE_INTERVAL = 76;
 const { log, warn } = console;
 
 async function updateInstruments() {

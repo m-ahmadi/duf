@@ -5,9 +5,9 @@ const signals = [
 ];
 
 $(async function () {
-	bars = (await tse.getPrices(['فولاد'],{adjustPrices:1}))[0];
+	bars = (await tse.getPrices(['شپنا'],{adjustPrices:0}))[0];
 	closes = bars.map(i => +Big(i.close).div(10).round(2,2));
-	prices = closes.slice(-800);
+	prices = closes.slice();
 	
 	canvas = document.querySelector('canvas');
 	c = canvas.getContext('2d');
@@ -60,7 +60,7 @@ $(async function () {
 	yAxLinesScaled.slice(1).slice(0,-1).forEach((v,i) => {
 		c.moveTo(pad, v);
 		c.lineTo(width+pad, v);
-		c.fillText(yAxLines[i+1], 15,v+4);
+		c.fillText(yAxLines[i+1], 10,v+4);
 	});
 	c.fillText(yAxLines[yAxLines.length-1],5,10);
 	c.fillText(yAxLines[0],5,height);
