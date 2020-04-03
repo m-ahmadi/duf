@@ -3,13 +3,19 @@
 </head>
 <style>
 #chart {
-	overflow-x: auto;
+	float: left;
+	overflow-y: auto;
+	width: 600px;
 }
 canvas {
 	/*border: 1px dashed grey;*/
 }
+#y-labels {
+	float: left;
+}
 </style>
 
+<canvas id="y-labels"></canvas>
 <div id="chart">
 	<canvas></canvas>
 </div>
