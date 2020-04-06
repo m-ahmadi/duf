@@ -71,7 +71,7 @@ $(async function () {
 	c.lineWidth = 1;
 	c.strokeStyle = 'cyan';
 	c.setLineDash([1]);
-	for (let i=0; i<width; i+=30) {
+	for (let i=60; i<width; i+=60) {
 		c.moveTo(i+pad, 0);
 		c.lineTo(i+pad, height);
 	}
