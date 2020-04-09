@@ -2,13 +2,13 @@
 	<meta charset="utf-8" />
 </head>
 <style>
-#chart {
+#graph-container {
 	float: left;
 	overflow-y: auto;
-	width: 600px;
+	width: 400px;
 }
 canvas {
-	/*border: 1px dashed grey;*/
+	border: 1px dashed grey;
 }
 #y-labels {
 	float: left;
@@ -16,8 +16,8 @@ canvas {
 </style>
 
 <canvas id="y-labels"></canvas>
-<div id="chart">
-	<canvas></canvas>
+<div id="graph-container">
+	<canvas id="graph"></canvas>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.7.3/localforage.min.js"></script>

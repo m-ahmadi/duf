@@ -1,4 +1,5 @@
 const log = console.log;
+const { floor, ceil } = Math;
 
 const signals = [
 	{symbol: '', enter: [], targets: [], supps: [], time: 30},
@@ -9,19 +10,21 @@ $(async function () {
 	closes = bars.map(i => +Big(i.close).div(10).round(2,2));
 	prices = closes.slice();
 	
-	canvas = document.querySelector('canvas');
-	c = canvas.getContext('2d');
-	pad = 35;
-	canvas.width = prices.length;
-	canvas.height = 400;
-	canvas.width += pad;
-	canvas.height += pad;
-	width = c.canvas.width - pad;
-	height = c.canvas.height - pad;
+	graphCanvas = document.querySelector('canvas#graph');
+	graph = graphCanvas.getContext('2d');
+	yAx = document.querySelector('canvas#y-labels').getContext('2d');
+	
+	graphCanvas.width = prices.length;
+	graphCanvas.height = 400;
+	width = graphCanvas.width;
+	height = graphCanvas.height;
+	yAx.canvas.width = 50;
+	yAx.canvas.height = graphCanvas.height;
+	// yAx.canvas.height += 20;
 	
 	pricesPx = map2px(prices);
 	pricesPxScaled = scale(pricesPx, 0, height);
-	step = 0+pad;
+	step = 0;
 	points = pricesPxScaled.map(i => ({x: step+=1, y: i}));
 	
 	var path = new Path2D();
@@ -31,57 +34,62 @@ $(async function () {
 	points.slice(1).forEach(({x,y}) =>
 		path.lineTo(x, y)
 	);
-	c.lineWidth = 1;
-	c.strokeStyle = 'blue';
-	c.stroke(path);
+	graph.lineWidth = 1;
+	graph.strokeStyle = 'blue';
+	graph.stroke(path);
 	
 	min = Math.min(...prices);
 	max = Math.max(...prices);
 	
-	// separator lines
-	c.lineWidth = 0.5;
-	c.strokeStyle = 'black';
-	c.moveTo(pad, height);
-	c.lineTo(width+pad, height);
-	c.moveTo(pad, 0);
-	c.lineTo(pad, height);
-	c.stroke();
-	
 	// horizontal lines and labels
-	c.beginPath();
-	c.lineWidth = 1;
-	c.strokeStyle = 'deeppink';
-	c.setLineDash([1]);
-	max2nd = max%100 ? max-(max%100) : max;
+	graph.beginPath();
+	graph.lineWidth = 0.1;
+	graph.strokeStyle = 'black';
+	
+	yScale = 200;
+	dif = max - min;
+	yLines = [...Array(ceil(dif/yScale)+1)].map((v,i)=>(i*yScale) + (min-(min%yScale)));
+	log(yLines);
+	scale(map2px(yLines), 0, height).slice(1).slice(0,-1).forEach((v,i) => {
+		const label = yLines[i+1];
+		const idx = label.toString().length -1;
+		graph.moveTo(0, v);
+		graph.lineTo(width, v);
+		yAx.fillText(label, 10+([20,15,10,5,-1][idx]),v+4);
+		yAx.moveTo(45, v);
+		yAx.lineTo(yAx.canvas.width, v);
+		yAx.stroke();
+	});
+	graph.stroke();
+	
+	/* max2nd = max%100 ? max-(max%100) : max;
 	min2nd = min%100 ? min+(100-min%100) : min;
 	step = min2nd;
-	yAxLines = [min, min2nd].concat([...Array( Math.floor((max2nd-min2nd)/100) )].map(()=>step+=100), max);
+	yAxLines = [min, min2nd].concat([...Array( floor((max2nd-min2nd)/100) )].map(()=>step+=100), max);
 	yAxLinesScaled = scale(map2px(yAxLines), 0, height);
 	yAxLinesScaled.slice(1).slice(0,-1).forEach((v,i) => {
-		c.moveTo(pad, v);
-		c.lineTo(width+pad, v);
-		c.fillText(yAxLines[i+1], 10,v+4);
+		const idx = v.toString().length - 1;
+		graph.moveTo(0, v);
+		graph.lineTo(width, v);
+		yAx.fillText(yAxLines[i+1], 10,v+4);
 	});
-	c.fillText(yAxLines[yAxLines.length-1],5,10);
-	c.fillText(yAxLines[0],5,height);
-	c.stroke();
+	graph.stroke(); */
 	
-	// vertical lines and labels
-	c.beginPath();
-	c.lineWidth = 1;
-	c.strokeStyle = 'cyan';
-	c.setLineDash([1]);
+	// vertical lines
+	graph.beginPath();
+	graph.lineWidth = 0.1;
+	graph.strokeStyle = 'black';
 	for (let i=60; i<width; i+=60) {
-		c.moveTo(i+pad, 0);
-		c.lineTo(i+pad, height);
+		graph.moveTo(i, 0);
+		graph.lineTo(i, height);
 	}
-	c.stroke();
+	graph.stroke();
 	
-	canvas.addEventListener('mousemove', function (e) {
-		// const x = e.offsetX - pad; //e.pageX - canvas.offsetLeft;
+	graphCanvas.addEventListener('mousemove', function (e) {
+		// const x = e.offsetX; //e.pageX - canvas.offsetLeft;
 		// const y = e.offsetY; //e.pageY - canvas.offsetTop;
 		// log(x, y);
-		// log( c.isPointInPath(path, x, y) );
+		// log( graph.isPointInPath(path, x, y) );
 	});
 });
 
