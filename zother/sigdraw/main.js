@@ -6,9 +6,9 @@ const signals = [
 ];
 
 $(async function () {
-	bars = (await tse.getPrices(['شپنا'],{adjustPrices:0}))[0];
+	bars = (await tse.getPrices(['خساپا'],{adjustPrices:0}))[0];
 	closes = bars.map(i => +Big(i.close).div(10).round(2,2));
-	prices = closes.slice();
+	prices = closes.slice(-600);
 	
 	graphCanvas = document.querySelector('canvas#graph');
 	graph = graphCanvas.getContext('2d');
@@ -43,13 +43,14 @@ $(async function () {
 	
 	// horizontal lines and labels
 	graph.beginPath();
-	graph.lineWidth = 0.1;
+	graph.lineWidth = 0.2;
 	graph.strokeStyle = 'black';
 	
-	yScale = 200;
+	/* yScale = 100;
 	dif = max - min;
 	yLines = [...Array(ceil(dif/yScale)+1)].map((v,i)=>(i*yScale) + (min-(min%yScale)));
 	log(yLines);
+	log(min, max);
 	scale(map2px(yLines), 0, height).slice(1).slice(0,-1).forEach((v,i) => {
 		const label = yLines[i+1];
 		const idx = label.toString().length -1;
@@ -60,24 +61,27 @@ $(async function () {
 		yAx.lineTo(yAx.canvas.width, v);
 		yAx.stroke();
 	});
-	graph.stroke();
+	graph.stroke(); */
 	
-	/* max2nd = max%100 ? max-(max%100) : max;
-	min2nd = min%100 ? min+(100-min%100) : min;
+	yScale = 100;
+	maxRem = max % yScale;
+	minRem = min % yScale;
+	max2nd = maxRem ? max - maxRem : max;
+	min2nd = minRem ? min + (yScale - minRem) : min;
 	step = min2nd;
-	yAxLines = [min, min2nd].concat([...Array( floor((max2nd-min2nd)/100) )].map(()=>step+=100), max);
-	yAxLinesScaled = scale(map2px(yAxLines), 0, height);
-	yAxLinesScaled.slice(1).slice(0,-1).forEach((v,i) => {
-		const idx = v.toString().length - 1;
+	yLines = [min, min2nd].concat([...Array( floor((max2nd-min2nd)/yScale) )].map(()=>step+=yScale), max);
+	scale(map2px(yLines), 0, height).slice(1).slice(0,-1).forEach((v,i) => {
+		const label = yLines[i+1];
+		const idx = label.toString().length - 1;
 		graph.moveTo(0, v);
 		graph.lineTo(width, v);
-		yAx.fillText(yAxLines[i+1], 10,v+4);
+		yAx.fillText(label, 10+([20,15,10,5,-1][idx]),v+4);
 	});
-	graph.stroke(); */
+	graph.stroke();
 	
 	// vertical lines
 	graph.beginPath();
-	graph.lineWidth = 0.1;
+	graph.lineWidth = 0.2;
 	graph.strokeStyle = 'black';
 	for (let i=60; i<width; i+=60) {
 		graph.moveTo(i, 0);
