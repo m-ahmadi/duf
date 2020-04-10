@@ -28,7 +28,6 @@ $(async function () {
 	points = pricesPxScaled.map(i => ({x: step+=1, y: i}));
 	
 	var path = new Path2D();
-	
 	// graph
 	path.moveTo(points[0].x, points[0].y);
 	points.slice(1).forEach(({x,y}) =>
@@ -46,23 +45,6 @@ $(async function () {
 	graph.lineWidth = 0.2;
 	graph.strokeStyle = 'black';
 	
-	/* yScale = 100;
-	dif = max - min;
-	yLines = [...Array(ceil(dif/yScale)+1)].map((v,i)=>(i*yScale) + (min-(min%yScale)));
-	log(yLines);
-	log(min, max);
-	scale(map2px(yLines), 0, height).slice(1).slice(0,-1).forEach((v,i) => {
-		const label = yLines[i+1];
-		const idx = label.toString().length -1;
-		graph.moveTo(0, v);
-		graph.lineTo(width, v);
-		yAx.fillText(label, 10+([20,15,10,5,-1][idx]),v+4);
-		yAx.moveTo(45, v);
-		yAx.lineTo(yAx.canvas.width, v);
-		yAx.stroke();
-	});
-	graph.stroke(); */
-	
 	yScale = 100;
 	maxRem = max % yScale;
 	minRem = min % yScale;
@@ -70,12 +52,19 @@ $(async function () {
 	min2nd = minRem ? min + (yScale - minRem) : min;
 	step = min2nd;
 	yLines = [min, min2nd].concat([...Array( floor((max2nd-min2nd)/yScale) )].map(()=>step+=yScale), max);
+	// dif = max - min;
+	// yLines = [...Array(ceil(dif/yScale)+1)].map((v,i)=>(i*yScale) + (min-(min%yScale)));
+	log(yLines);
+	log(min, max)
 	scale(map2px(yLines), 0, height).slice(1).slice(0,-1).forEach((v,i) => {
 		const label = yLines[i+1];
 		const idx = label.toString().length - 1;
 		graph.moveTo(0, v);
 		graph.lineTo(width, v);
 		yAx.fillText(label, 10+([20,15,10,5,-1][idx]),v+4);
+		yAx.moveTo(45, v);
+		yAx.lineTo(yAx.canvas.width, v);
+		yAx.stroke();
 	});
 	graph.stroke();
 	
