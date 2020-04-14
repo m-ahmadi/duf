@@ -22,7 +22,7 @@ $(async function () {
 	yAx.canvas.height = graphCanvas.height;
 	// yAx.canvas.height += 20;
 	
-	pricesPx = map2px(prices);
+	pricesPx = map2px(prices, height);
 	pricesPxScaled = scale(pricesPx, 0, height);
 	step = 0;
 	points = pricesPxScaled.map(i => ({x: step+=1, y: i}));
@@ -56,7 +56,7 @@ $(async function () {
 	// yLines = [...Array(ceil(dif/yScale)+1)].map((v,i)=>(i*yScale) + (min-(min%yScale)));
 	log(yLines);
 	log(min, max)
-	scale(map2px(yLines), 0, height).slice(1).slice(0,-1).forEach((v,i) => {
+	scale(map2px(yLines, height), 0, height).slice(1).slice(0,-1).forEach((v,i) => {
 		const label = yLines[i+1];
 		const idx = label.toString().length - 1;
 		graph.moveTo(0, v);
@@ -86,7 +86,7 @@ $(async function () {
 	});
 });
 
-function map2px(nums) {
+function map2px(nums, height=150) {
 	const min = Math.min(...nums);
 	return nums.map(i =>
 		+(i + ( height - (i+(i-min)) )).toFixed(1)
