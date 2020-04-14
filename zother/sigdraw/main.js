@@ -9,6 +9,8 @@ $(async function () {
 	bars = (await tse.getPrices(['خساپا'],{adjustPrices:0}))[0];
 	closes = bars.map(i => +Big(i.close).div(10).round(2,2));
 	prices = closes.slice(-600);
+	min = Math.min(...prices);
+	max = Math.max(...prices);
 	
 	graphCanvas = document.querySelector('canvas#graph');
 	graph = graphCanvas.getContext('2d');
@@ -22,7 +24,7 @@ $(async function () {
 	yAx.canvas.height = graphCanvas.height;
 	
 	pricesPx = map2px(prices, height);
-	pricesPxScaled = scale(pricesPx, 0, height);
+	pricesPxScaled = scale(pricesPx, height-max, height-min);
 	step = 0;
 	points = pricesPxScaled.map(i => ({x: step+=1, y: i}));
 	
@@ -36,23 +38,20 @@ $(async function () {
 	graph.strokeStyle = 'blue';
 	graph.stroke(path);
 	
-	min = Math.min(...prices);
-	max = Math.max(...prices);
-	
 	// horizontal lines and labels
 	graph.beginPath();
-	graph.lineWidth = 0.2;
+	graph.lineWidth = 0.3;
 	graph.strokeStyle = 'black';
 	
 	yScale = 100;
-	maxRem = max % yScale;
-	minRem = min % yScale;
-	max2nd = maxRem ? max - maxRem : max;
-	min2nd = minRem ? min + (yScale - minRem) : min;
-	step = min2nd;
-	yLines = [min, min2nd].concat([...Array( floor((max2nd-min2nd)/yScale) )].map(()=>step+=yScale), max);
-	// dif = max - min;
-	// yLines = [...Array(ceil(dif/yScale)+1)].map((v,i)=>(i*yScale) + (min-(min%yScale)));
+	// maxRem = max % yScale;
+	// minRem = min % yScale;
+	// max2nd = maxRem ? max - maxRem : max;
+	// min2nd = minRem ? min + (yScale - minRem) : min;
+	// step = min2nd;
+	// yLines = [min, min2nd].concat([...Array( floor((max2nd-min2nd)/yScale) )].map(()=>step+=yScale), max);
+	dif = max - min;
+	yLines = [...Array(ceil(dif/yScale)+1)].map((v,i)=>(i*yScale) + (min-(min%yScale)));
 	log(yLines);
 	log(min, max)
 	scale(map2px(yLines, height), 0, height).slice(1).slice(0,-1).forEach((v,i) => {
