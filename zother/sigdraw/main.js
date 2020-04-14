@@ -20,7 +20,6 @@ $(async function () {
 	height = graphCanvas.height;
 	yAx.canvas.width = 50;
 	yAx.canvas.height = graphCanvas.height;
-	// yAx.canvas.height += 20;
 	
 	pricesPx = map2px(prices, height);
 	pricesPxScaled = scale(pricesPx, 0, height);
