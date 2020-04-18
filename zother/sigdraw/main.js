@@ -51,13 +51,6 @@ $(async function () {
 	graph.lineWidth = 0.3;
 	graph.strokeStyle = 'black';
 	
-	// maxRem = max % yScale;
-	// minRem = min % yScale;
-	// max2nd = maxRem ? max - maxRem : max;
-	// min2nd = minRem ? min + (yScale - minRem) : min;
-	// step = min2nd;
-	// yLines = [min, min2nd].concat([...Array( floor((max2nd-min2nd)/yScale) )].map(()=>step+=yScale), max);
-	
 	yLines = [];
 	for (let i=yLower; i<=yUpper; i+=yScale) yLines.push(i);
 	
