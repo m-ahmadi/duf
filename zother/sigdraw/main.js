@@ -28,8 +28,8 @@ $(async function () {
 	minRem = dp(min % yScale);
 	yUpper = maxRem ? dp(max + (yScale-maxRem)) : max;
 	yLower = minRem ? dp(min - minRem) : min;
-	minScale = yUpper-max;
-	maxScale = height-(min-yLower);
+	minScale = dp(yUpper - max);
+	maxScale = dp(height - (min-yLower));
 	
 	pricesPx = map2px(prices, height);
 	pricesPxScaled = scale(pricesPx, minScale, maxScale);
