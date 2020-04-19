@@ -13,11 +13,25 @@ canvas {
 #y-labels {
 	float: left;
 }
+#y-section {
+	position: relative;
+}
+#y-scale-btn {
+	position: absolute;
+	left: 0;
+	padding: 0;
+	width: 40px;
+}
 </style>
 
-<canvas id="y-labels"></canvas>
-<div id="graph-container">
-	<canvas id="graph"></canvas>
+<div>
+	<div id="y-section">
+		<canvas id="y-labels"></canvas>
+		<input id="y-scale-btn" type="number" min="10" max="400" step="5" value="50" />
+	</div>
+	<div id="graph-container">
+		<canvas id="graph"></canvas>
+	</div>
 </div>
 
 <script src="./lib/localforage.min.js"></script>
