@@ -13,9 +13,9 @@ if %errorlevel% == 1 (echo cmdow not installed. && exit /b 1)
 
 setlocal EnableDelayedExpansion
 set count=0
-set top=157
-set left=1430
-set step=110
+set top=-35
+set left=875
+set step=95
 for /f %%i in ('cmdow /t') do (
 	cmdow %%i /mov !left! !top!
 	set /a "top=!top!+!step!"
