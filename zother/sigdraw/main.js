@@ -6,9 +6,8 @@ const signals = [
 ];
 
 $(async function () {
-	bars = (await tse.getPrices(['خساپا'],{adjustPrices:0}))[0];
-	closes = bars.map(i => +Big(i.close).div(10).round(2,2));
-	prices = closes.slice(-500);
+	[ bars ] = await tse.getPrices(['خساپا'],{adjustPrices:0});
+	prices = bars.slice(-800).map(i => +Big(i.close).div(10).round(2,2));
 	
 	graphCanvas = document.querySelector('canvas#graph');
 	graph = graphCanvas.getContext('2d');
@@ -129,7 +128,6 @@ function scale(nums, newMin=0, newMax=100) {
 function dp(num, place=1) {
 	return +( num.toFixed(place) );
 }
-
 
 function debounce(fn, wait) {
 	let timeout
