@@ -5,7 +5,7 @@ const signals = [
 	{symbol: '', enter: [], targets: [], supps: [], time: 30},
 ];
 
-$(async function () {
+document.addEventListener('DOMContentLoaded', async function () {
 	[ bars ] = await tse.getPrices(['خساپا'],{adjustPrices:0});
 	prices = bars.slice(-800).map(i => +Big(i.close).div(10).round(2,2));
 	
@@ -135,4 +135,26 @@ function debounce(fn, wait) {
 		clearTimeout(timeout);
 		timeout = setTimeout(() => fn.apply(this, args), wait);
 	};
+}
+
+function __els(root=document, obj, overwrite=false) {
+	if (typeof root === 'string') root = document.querySelector(root);
+	const res = {};
+	const el = root.querySelectorAll('[data-el]');
+	const els = root.querySelectorAll('[data-els]');
+	[...el].forEach(i => res[ i.dataset.el ] = i);
+	[...els].forEach(i => {
+		i.dataset.els.split(' ').forEach(k => {
+			if (!res[k]) res[k] = [];
+			res[k].push(i);
+		});
+	});
+	res.root = root;
+	if (obj) {
+		Object.keys(res).forEach(k => {
+			if (!obj[k] || overwrite) obj[k] = res[k];
+		});
+	} else {
+		return res;
+	}
 }
