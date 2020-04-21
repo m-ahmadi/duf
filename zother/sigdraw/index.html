@@ -2,7 +2,7 @@
 	<meta charset="utf-8" />
 </head>
 <style>
-#graph-container {
+.graph-container {
 	float: left;
 	overflow-y: auto;
 	width: 550px;
@@ -10,13 +10,17 @@
 canvas {
 	border: 1px dashed grey;
 }
-canvas#y-labels {
-	float: left;
-}
-div#y-section {
+div.y-section {
 	position: relative;
 }
-#y-scale-btn {
+canvas.y-labels {
+	float: left;
+}
+canvas.y-overlay {
+	position: absolute;
+	left: 0;
+}
+input.y-scale-btn {
 	position: absolute;
 	left: 0;
 	padding: 0;
@@ -24,13 +28,14 @@ div#y-section {
 }
 </style>
 
-<div>
-	<div id="y-section">
-		<canvas id="y-labels"></canvas>
-		<input id="y-scale-btn" type="number" min="10" max="400" step="5" value="50" />
+<div data-root="chart">
+	<div class="y-section">
+		<canvas class="y-labels" data-el="yAxCanvas"></canvas>
+		<canvas class="y-overlay" data-el="yOverlayCanvas"></canvas>
+		<input class="y-scale-btn" type="number" min="10" max="400" step="5" value="50" data-el="yScaleBtn" />
 	</div>
-	<div id="graph-container">
-		<canvas id="graph"></canvas>
+	<div class="graph-container">
+		<canvas data-el="graphCanvas"></canvas>
 	</div>
 </div>
 

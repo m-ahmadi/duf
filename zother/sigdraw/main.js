@@ -9,17 +9,19 @@ document.addEventListener('DOMContentLoaded', async function () {
 	[ bars ] = await tse.getPrices(['خساپا'],{adjustPrices:0});
 	prices = bars.slice(-800).map(i => +Big(i.close).div(10).round(2,2));
 	
-	graphCanvas = document.querySelector('canvas#graph');
+	const { graphCanvas, yAxCanvas, yOverlayCanvas, yScaleBtn  } = __els('[data-root=chart]');
 	graph = graphCanvas.getContext('2d');
-	yAx = document.querySelector('canvas#y-labels').getContext('2d');
-	yScaleBtn = document.querySelector('#y-scale-btn');
+	yAx = yAxCanvas.getContext('2d');
 	
-	graphCanvas.width = prices.length;
-	graphCanvas.height = 400;
-	width = graphCanvas.width;
-	height = graphCanvas.height;
+	width = prices.length;
+	height = 400;
+	
+	graphCanvas.width = width;
+	graphCanvas.height = height;
 	yAx.canvas.width = 50;
-	yAx.canvas.height = graphCanvas.height;
+	yAx.canvas.height = height;
+	yOverlayCanvas.width = yAx.canvas.width;
+	yOverlayCanvas.height = height;
 	yScaleBtn.style.top = height;
 	
 	min = Math.min(...prices);
