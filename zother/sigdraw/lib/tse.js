@@ -30,11 +30,13 @@ const rq = {
 		return this.makeRequest(params);
 	},
 	makeRequest(params) {
-		const url = new URL('http://service.tsetmc.com/tsev2/data/TseClient2.aspx')
+		const url = new URL('http://service.tsetmc.com/tsev2/data/TseClient2.aspx');
 		url.search = new URLSearchParams(params).toString();
 		
 		return new Promise((resolve, reject) => {
-			fetch(url).then(async res => resolve(await res.text()) ).catch(err => reject(err))
+			fetch(url).then(async res => {
+				res.status === 200 ? resolve(await res.text()) : reject(res.status +' '+ res.statusText);
+			}).catch(err => reject(err));
 		});
 		
 		/* return $.ajax({
@@ -111,7 +113,7 @@ class Share {
 }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // utils
-function parseInstruments(struct=false, arr=false) {
+function parseInstruments(struct=false, arr=false, structKey='InsCode') {
 	const rows = localStorage.getItem('tse.instruments').split(';');
 	const instruments = arr ? [] : {};
 	for (const row of rows) {
@@ -119,13 +121,14 @@ function parseInstruments(struct=false, arr=false) {
 		if (arr) {
 			instruments.push(item);
 		} else {
-			instruments[ row.match(/^\d+\b/)[0] ] = item;
+			const key = struct ? item[structKey] : row.match(/^\d+\b/)[0];
+			instruments[key] = item;
 		}
 	}
 	return instruments;
-};
+}
 function parseShares(arr=false) {
-	const rows = localStorage.getItem('tse.shares').split(';')
+	const rows = localStorage.getItem('tse.shares').split(';');
 	const shares = arr ? [] : {};
 	for (const row of rows) {
 		const item = new Share(row);
@@ -136,9 +139,9 @@ function parseShares(arr=false) {
 		}
 	}
 	return shares;
-};
+}
 function dateToStr(d) {
-  return (d.getFullYear()*10000) + ( (d.getMonth()+1)*100 ) + d.getDate() + '';
+	return (d.getFullYear()*10000) + ( (d.getMonth()+1)*100 ) + d.getDate() + '';
 }
 function cleanFa(str) {
 	return str
@@ -151,15 +154,17 @@ function cleanFa(str) {
 		.replace(/ي/g,'ی');
 }
 function gregToShamsi(s) {
-  const { jy, jm, jd } = jalaali.toJalaali(+s.slice(0, 4), +s.slice(4, 6), +s.slice(6, 8));
-  return (jy*10000) + (jm*100) + jd + '';
+	const { jy, jm, jd } = jalaali.toJalaali(+s.slice(0, 4), +s.slice(4, 6), +s.slice(6, 8));
+	return (jy*10000) + (jm*100) + jd + '';
 }
 function shamsiToGreg(s) {
-  const { gy, gm, gd } = jalaali.toGregorian(+s.slice(0, 4), +s.slice(4, 6), +s.slice(6, 8));
-  return (gy*10000) + (gm*100) + gd + '';
+	const { gy, gm, gd } = jalaali.toGregorian(+s.slice(0, 4), +s.slice(4, 6), +s.slice(6, 8));
+	return (gy*10000) + (gm*100) + gd + '';
 }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 // price helpers
+Big.DP = 40; // max decimal places
+Big.RM = 2;  // rounding mode: http://mikemcl.github.io/big.js/#rm
 function adjust(cond, closingPrices, shares, insCode) {
 	const cp = closingPrices;
 	const len = closingPrices.length;
@@ -219,11 +224,8 @@ function adjust(cond, closingPrices, shares, insCode) {
 	return res.reverse();
 	// return res;
 }
-function getCell(columnName, instrument, closingPrice, adjustPrices) {
-	const y = instrument.YMarNSC;
-	const a = adjustPrices;
+function getCell(columnName, instrument, closingPrice) {
 	const c = columnName;
-	
 	const str =
 		c === 'CompanyCode'    ? instrument.CompanyCode :
 		c === 'LatinName'      ? instrument.LatinName :
@@ -244,9 +246,22 @@ function getCell(columnName, instrument, closingPrice, adjustPrices) {
 	return str;
 }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-const startDeven = '20010321';
-const UPDATE_INTERVAL = 76;
-const { log, warn } = console;
+const UPDATE_INTERVAL = 1;
+const defaultSettings = {
+	columns: [
+		[4, 'date'],
+		[6, 'open'],
+		[7, 'high'],
+		[8, 'low'],
+		[9, 'last'],
+		[10, 'close'],
+		[12, 'vol']
+	],
+	adjustPrices: 0,
+	daysWithoutTrade: false,
+	startDate: '20010321'
+};
+const { warn } = console;
 
 async function updateInstruments() {
 	const lastUpdate = localStorage.getItem('tse.lastInstrumentUpdate');
@@ -269,7 +284,7 @@ async function updateInstruments() {
 	
 	let error;
 	const res = await rq.InstrumentAndShare(lastDeven, lastId).catch(err => error = err);
-	if (error) { warn('Failed request: InstrumentAndShare'); return; } // TODO: better handling
+	if (error) { warn('Failed request: InstrumentAndShare', `(${error})`); return; } // TODO: better handling
 	
 	const splitted  = res.split('@');
 	let instruments = splitted[0];
@@ -302,14 +317,14 @@ async function getLastPossibleDeven() {
 	let lastPossibleDeven = localStorage.getItem('tse.lastPossibleDeven');
 	const today = new Date();
 	if ( !lastPossibleDeven || (+dateToStr(today)-lastPossibleDeven > UPDATE_INTERVAL && ![4,5].includes(today.getDay())) ) {
-		const res = await rq.LastPossibleDeven()
+		const res = await rq.LastPossibleDeven();
 		if ( !/^\d{8};\d{8}$/.test(res) ) throw new Error('Invalid server response: LastPossibleDeven');
 		lastPossibleDeven = res.split(';')[0] || res.split(';')[1];
-		localStorage.setItem('tse.lastPossibleDeven', lastPossibleDeven)
+		localStorage.setItem('tse.lastPossibleDeven', lastPossibleDeven);
 	}
 	return +lastPossibleDeven;
 }
-async function updatePrices(instruments=[]) {
+async function updatePrices(instruments=[], startDeven) {
 	if (!instruments.length) return;
 	const lastPossibleDeven = await getLastPossibleDeven();
 	
@@ -326,7 +341,7 @@ async function updatePrices(instruments=[]) {
 			const rows = insData.split(';');
 			const lastRow = new ClosingPrice( rows[rows.length-1] );
 			const lastRowDEven = +lastRow.DEven;
-			if (lastPossibleDeven - lastRowDEven > UPDATE_INTERVAL) { // outdated
+			if (lastPossibleDeven - lastRowDEven > UPDATE_INTERVAL) { // but outdated
 				insCodes.push( [insCode, lastRowDEven, market] );
 				updateNeeded.push( {insCode, oldContent: insData} );
 			}
@@ -338,72 +353,57 @@ async function updatePrices(instruments=[]) {
 	
 	let error;
 	const res = await rq.ClosingPrices(insCodes).catch(err => error = err);
-	if (error)                       { warn('Failed request: ClosingPrices', error);   return; }
-	if ( !/^[\d\.,;@]*$/.test(res) ) { warn('Invalid server response: ClosingPrices'); return; }
-	if (res === '')                  { warn('Unknown Error.');                         return; }
+	if (error)                       { warn('Failed request: ClosingPrices', `(${error})`);   return; }
+	if ( !/^[\d\.,;@]*$/.test(res) ) { warn('Invalid server response: ClosingPrices');        return; }
+	if (res === '')                  { warn('Unknown Error.');                                return; }
 	
 	const newData = res.split('@');
 	const writes = updateNeeded.map((v, i) => {
 		const { insCode, oldContent } = v;
 		const newContent = newData[i];
 		const content = oldContent ? oldContent+';'+newContent : newContent;
-		return ['tse.'+insCode, content]
+		return ['tse.'+insCode, content];
 	});
 	for (const write of writes) await localforage.setItem(write[0], write[1]);
 }
-
-const defaultSettings = {
-	columns: [
-    [4, 'date'],
-    [6, 'open'],
-    [7, 'high'],
-    [8, 'low'],
-    [9, 'last'],
-    [10, 'close'],
-    [12, 'vol']
-  ],
-	adjustPrices: 0,
-	daysWithoutTrade: false,
-	startDate: '20010321'
-};
-Big.DP = 40
-Big.RM = 2;
 async function getPrices(symbols=[], settings={}) {
-	settings = Object.assign(defaultSettings, settings);
-	const instruments = parseInstruments(true, true);
-	const selection = instruments.filter(i => symbols.includes(i.Symbol));
-	if (!selection.length) return;
+	if (!symbols.length) return;
+	const instruments = parseInstruments(true, undefined, 'Symbol');
+	const selection = symbols.map(i => instruments[i]);
+	const notFounds = symbols.filter((v,i) => !selection[i]);
+	if (notFounds.length) { console.error('Incorrect symbol names:', notFounds); return; }
 	
-	await updatePrices(selection);
+	settings = Object.assign(defaultSettings, settings);
+	const { adjustPrices, startDate, daysWithoutTrade } = settings;
+	
+	await updatePrices(selection, startDate);
 	
 	const prices = {};
 	for (const v of selection) {
 		const insCode = v.InsCode;
 		prices[insCode] = (await localforage.getItem('tse.'+insCode)).split(';').map(i => new ClosingPrice(i));
 	}
+	const shares = localStorage.getItem('tse.shares').split(';').map(i => new Share(i));
 	const columns = settings.columns.map( i => new Column(!Array.isArray(i) ? [i] : i) );
 	
-  const shares = localStorage.getItem('tse.shares').split(';').map(i => new Share(i));
-	
-	const { adjustPrices, startDate, daysWithoutTrade } = settings;
 	const res = selection.map(instrument => {
-    const insCode = instrument.InsCode;
-    const cond = adjustPrices;
-    const closingPrices = cond === 1 || cond === 2
+		const insCode = instrument.InsCode;
+		const cond = adjustPrices;
+		const closingPrices = cond === 1 || cond === 2
 			? adjust(cond, prices[insCode], shares, insCode)
 			: prices[insCode];
 		
-    return closingPrices
+		return closingPrices
 			.map(closingPrice => {
 				if ( Big(closingPrice.DEven).lt(startDate) ) return;
 				if ( Big(closingPrice.ZTotTran).eq(0) && !daysWithoutTrade ) return;
 				
 				return columns
-					.map( ({name,header}) => [header || name, getCell(name, instrument, closingPrice, adjustPrices)] )
-					.reduce((a,c) => (a[c[0]] = /^[\d\.]+$/.test(c[1]) ? parseFloat(c[1]) : c[1]) && a, {});
+					.map( ({name,header}) => [header || name, getCell(name, instrument, closingPrice)] )
+					.reduce((a,c) => {a[c[0]] = /^\d+(\.?\d+)?$/.test(c[1]) ? parseFloat(c[1]) : c[1]; return a;}, {});
 			})
 			.filter(i=>!!i);
-  });
+	});
 	
 	return res;
 }
@@ -411,7 +411,7 @@ async function getPrices(symbols=[], settings={}) {
 return {
 	getPrices, updateInstruments,
 	get columnList() {
-		return [...Array(15)].map((v,i) => ({name: cols[i], fname: colsFa[i]}))
+		return [...Array(15)].map((v,i) => ({name: cols[i], fname: colsFa[i]}));
 	}
 };
 })();
