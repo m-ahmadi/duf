@@ -1,34 +1,11 @@
 @use "uikit";
 @use "materialize-colors";
 @use "combo";
+@use "datable";
 
 body {
 	width: 100%;
 	margin: 0 auto;
 	font-family: "BYekan", Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
 	background: #fffdef;
-}
-
-#datable {
-	td > input {
-		@extend .uk-input;
-		padding: 0 !important;
-	}
-	td > select {
-		@extend .uk-select;
-		/*rtl:ignore*/
-		background-position: -22% 50% !important;
-	}
-	td>input, td>select {
-		@extend .uk-form-small;
-		padding-right: 0 !important;
-		height: 22px !important;
-	}
-	
-	.buyrange {
-		width: 65px;
-		> input { float: left; }
-	}
-	.date > input { width: 35px; }
-	.w8time > * { width: 50px; }
 }

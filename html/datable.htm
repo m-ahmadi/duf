@@ -1,0 +1,48 @@
+<table id="datable" class="table table-hover" data-root="datable">
+	<tr class="pink lighten-5">
+		<th>نماد</th>
+		<th>رنج خرید</th>
+		<th>تاریخ</th>
+		<th>اهداف</th>
+		<th>حد ضرر</th>
+		<th>زمان</th>
+		<th>ریسک</th>
+	</tr>
+	
+	<tr>
+		<td>
+			<div class="combo"></div>
+		</td>
+		
+		<td class="buyrange">
+			<input type="number" min="1" step="0.1" uk-tooltip="title:حداکثر; pos: top" />
+			<input type="number" min="1" step="0.1" uk-tooltip="title:حداقل; pos: bottom" />
+		</td>
+		
+		<td class="date">
+			<input type="number" min="1" max="31" uk-tooltip="روز" data-els="date" />
+			<input type="number" min="1" max="12" uk-tooltip="ماه" data-els="date" />
+			<input type="number" min="00" max="99" uk-tooltip="سال" data-els="date" data-year />
+		</td>
+		
+		<td><input type="number" /></td>
+		<td><input type="number" /></td>
+		
+		<td class="w8time">
+			<input type="number" />
+			<select>
+				<option>روز</option>
+				<option>ماه</option>
+				<option>سال</option>
+			</select>
+		</td>
+		
+		<td>
+			<select>
+				<option>کم</option>
+				<option>زیاد</option>
+				<option>متوسط</option>
+			</select>
+		</td>
+	</tr>
+</table>
